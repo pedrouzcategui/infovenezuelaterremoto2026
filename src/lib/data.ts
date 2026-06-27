@@ -137,15 +137,18 @@ export async function getPuntosMapa(): Promise<PuntoMapa[]> {
 
   for (const c of centros) {
     if (c.latitud == null || c.longitud == null) continue;
+    // Si el centro es un hospital, se agrupa (y colorea) como Hospital en el mapa.
+    const esHospital = c.tipo === "Hospital";
+    const meta = esHospital ? servicioMeta("Hospital") : null;
     puntos.push({
       id: c.id,
       tipo: "centro",
-      grupo: "Centros de acopio",
+      grupo: esHospital ? "Hospital" : "Centros de acopio",
       nombre: c.nombre,
       lat: c.latitud,
       lng: c.longitud,
-      color: "#10b981",
-      emoji: "🤝",
+      color: meta?.color ?? "#10b981",
+      emoji: meta?.emoji ?? "🤝",
       foto: c.foto_url,
       detalle: [
         "Centro de acopio",
