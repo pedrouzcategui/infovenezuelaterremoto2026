@@ -70,7 +70,7 @@ export function Footer() {
             <p>Créditos · Desarrollo web: Pedro Uzcátegui</p>
             <p className="mt-1">
               Contribución de información y administración: Mercedes Pineda,
-              Jesús Sirit
+              Jesús Sirit, Albany Torres
             </p>
             <p className="mt-1">
               Hecho con cariño para Venezuela y el mundo 💚 ·{" "}
