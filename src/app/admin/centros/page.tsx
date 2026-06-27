@@ -6,6 +6,7 @@ import { AdminNav } from "../AdminNav";
 import { actualizarCentro, eliminarCentro } from "../actions";
 import { CentroForm } from "./CentroForm";
 import { CentroQR } from "../../components/CentroQR";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +44,20 @@ export default async function AdminCentrosPage() {
             {centros.map((c) => (
               <li key={c.id} className="rounded-none border border-border bg-surface">
                 <details>
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
-                    <span>
+                  <summary className="flex cursor-pointer list-none items-center gap-3 p-3">
+                    {c.foto_url ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={c.foto_url}
+                        alt=""
+                        className="h-14 w-20 shrink-0 rounded-none object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-20 shrink-0 items-center justify-center bg-surface-2 text-xl opacity-50">
+                        🤝
+                      </div>
+                    )}
+                    <span className="min-w-0 flex-1">
                       <span className="font-medium text-foreground">{c.nombre}</span>{" "}
                       {!c.activo && (
                         <span className="rounded-none bg-surface-2 px-1.5 py-0.5 text-xs text-muted">
@@ -58,10 +71,10 @@ export default async function AdminCentrosPage() {
                       )}
                       <span className="ml-2 text-xs text-faint">{c.zona}</span>
                     </span>
-                    <span className="text-xs text-faint">Editar ▾</span>
+                    <span className="shrink-0 text-xs text-faint">Editar ▾</span>
                   </summary>
 
-                  <form action={actualizarCentro} className="space-y-3 border-t border-border p-4">
+                  <ToastForm action={actualizarCentro} successMsg="Centro actualizado ✅" className="space-y-3 border-t border-border p-4">
                     <input type="hidden" name="id" value={c.id} />
                     <div className="grid gap-3 sm:grid-cols-2">
                       <input name="nombre" defaultValue={c.nombre} className={cls} />
@@ -144,18 +157,23 @@ export default async function AdminCentrosPage() {
                         Guardar
                       </button>
                     </div>
-                  </form>
+                  </ToastForm>
 
                   <div className="border-t border-border p-4">
                     <CentroQR id={c.id} nombre={c.nombre} />
                   </div>
 
-                  <form action={eliminarCentro} className="border-t border-border px-4 py-2">
+                  <ToastForm
+                    action={eliminarCentro}
+                    successMsg="Centro eliminado"
+                    confirm={`¿Eliminar "${c.nombre}"? No se puede deshacer.`}
+                    className="border-t border-border px-4 py-2"
+                  >
                     <input type="hidden" name="id" value={c.id} />
                     <button type="submit" className="text-xs font-medium text-red-600 hover:underline">
                       Eliminar centro
                     </button>
-                  </form>
+                  </ToastForm>
                 </details>
               </li>
             ))}

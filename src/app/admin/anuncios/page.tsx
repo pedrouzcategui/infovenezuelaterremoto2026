@@ -6,6 +6,7 @@ import { ANUNCIO_META } from "@/lib/labels";
 import { AdminNav } from "../AdminNav";
 import { actualizarAnuncio, eliminarAnuncio } from "../actions";
 import { AnuncioForm } from "./AnuncioForm";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ export default async function AdminAnunciosPage() {
                     </span>
                   </summary>
 
-                  <form action={actualizarAnuncio} className="space-y-3 border-t border-border p-4">
+                  <ToastForm action={actualizarAnuncio} successMsg="Anuncio actualizado ✅" className="space-y-3 border-t border-border p-4">
                     <input type="hidden" name="id" value={a.id} />
                     <input name="titulo" defaultValue={a.titulo} className={cls} />
                     <textarea name="contenido" defaultValue={a.contenido} rows={4} className={cls} />
@@ -110,14 +111,19 @@ export default async function AdminAnunciosPage() {
                     <button type="submit" className="rounded-none bg-strong px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
                       Guardar
                     </button>
-                  </form>
+                  </ToastForm>
 
-                  <form action={eliminarAnuncio} className="border-t border-border px-4 py-2">
+                  <ToastForm
+                    action={eliminarAnuncio}
+                    successMsg="Anuncio eliminado"
+                    confirm={`¿Eliminar "${a.titulo}"?`}
+                    className="border-t border-border px-4 py-2"
+                  >
                     <input type="hidden" name="id" value={a.id} />
                     <button type="submit" className="text-xs font-medium text-red-600 hover:underline">
                       Eliminar anuncio
                     </button>
-                  </form>
+                  </ToastForm>
                 </details>
               </li>
             ))}

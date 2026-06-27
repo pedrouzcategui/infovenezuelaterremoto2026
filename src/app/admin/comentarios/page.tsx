@@ -4,6 +4,7 @@ import type { Comentario } from "@/lib/types";
 import { formatFecha } from "@/lib/format";
 import { AdminNav } from "../AdminNav";
 import { eliminarComentario, ocultarComentario } from "../actions";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +75,7 @@ export default async function AdminComentariosPage() {
               </p>
 
               <div className="mt-3 flex gap-3">
-                <form action={ocultarComentario}>
+                <ToastForm action={ocultarComentario} successMsg="Comentario actualizado ✅">
                   <input type="hidden" name="id" value={c.id} />
                   <input type="hidden" name="centro_id" value={c.centro_id} />
                   <input type="hidden" name="oculto" value={String(c.oculto)} />
@@ -84,8 +85,12 @@ export default async function AdminComentariosPage() {
                   >
                     {c.oculto ? "Mostrar" : "Ocultar"}
                   </button>
-                </form>
-                <form action={eliminarComentario}>
+                </ToastForm>
+                <ToastForm
+                  action={eliminarComentario}
+                  successMsg="Comentario eliminado"
+                  confirm="¿Eliminar este comentario?"
+                >
                   <input type="hidden" name="id" value={c.id} />
                   <input type="hidden" name="centro_id" value={c.centro_id} />
                   <button
@@ -94,7 +99,7 @@ export default async function AdminComentariosPage() {
                   >
                     Eliminar
                   </button>
-                </form>
+                </ToastForm>
               </div>
             </li>
           ))}

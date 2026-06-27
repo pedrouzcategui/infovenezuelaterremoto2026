@@ -5,6 +5,7 @@ import { formatFecha } from "@/lib/format";
 import { AdminNav } from "../AdminNav";
 import { aprobarUsuario, cambiarRol, rechazarUsuario } from "../actions";
 import { ConfirmButton } from "./ConfirmButton";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -77,14 +78,14 @@ export default async function AdminUsuariosPage() {
 
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
                 {p.estado !== "aprobado" && (
-                  <form action={aprobarUsuario}>
+                  <ToastForm action={aprobarUsuario} successMsg="Usuario aprobado ✅">
                     <input type="hidden" name="id" value={p.id} />
                     <button className="bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700">
                       Aprobar
                     </button>
-                  </form>
+                  </ToastForm>
                 )}
-                <form action={rechazarUsuario}>
+                <ToastForm action={rechazarUsuario} successMsg="Usuario eliminado">
                   <input type="hidden" name="id" value={p.id} />
                   <ConfirmButton
                     message={`¿Eliminar a ${p.email ?? "este usuario"}? Se borrará su cuenta por completo. Si vuelve a iniciar sesión, entrará de nuevo como pendiente.`}
@@ -92,8 +93,8 @@ export default async function AdminUsuariosPage() {
                   >
                     Eliminar
                   </ConfirmButton>
-                </form>
-                <form action={cambiarRol}>
+                </ToastForm>
+                <ToastForm action={cambiarRol} successMsg="Rol actualizado ✅">
                   <input type="hidden" name="id" value={p.id} />
                   <input
                     type="hidden"
@@ -103,7 +104,7 @@ export default async function AdminUsuariosPage() {
                   <button className="border border-border px-3 py-1.5 font-medium text-muted hover:bg-surface-2">
                     {p.role === "admin" ? "Quitar admin" : "Hacer admin"}
                   </button>
-                </form>
+                </ToastForm>
               </div>
             </li>
           ))}

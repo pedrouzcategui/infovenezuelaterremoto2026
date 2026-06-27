@@ -4,6 +4,7 @@ import type { Institucion } from "@/lib/types";
 import { AdminNav } from "./AdminNav";
 import { actualizarInstitucion, eliminarInstitucion } from "./actions";
 import { InstitucionForm } from "./InstitucionForm";
+import { ToastForm } from "../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,7 @@ export default async function AdminInstitucionesPage() {
                     </span>
                   </summary>
 
-                  <form action={actualizarInstitucion} className="space-y-3 border-t border-border p-4">
+                  <ToastForm action={actualizarInstitucion} successMsg="Institución actualizada ✅" className="space-y-3 border-t border-border p-4">
                     <input type="hidden" name="id" value={i.id} />
                     <div className="grid gap-3 sm:grid-cols-2">
                       <input name="nombre" defaultValue={i.nombre} className={cls} />
@@ -94,14 +95,19 @@ export default async function AdminInstitucionesPage() {
                     <button type="submit" className="bg-strong px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
                       Guardar
                     </button>
-                  </form>
+                  </ToastForm>
 
-                  <form action={eliminarInstitucion} className="border-t border-border px-4 py-2">
+                  <ToastForm
+                    action={eliminarInstitucion}
+                    successMsg="Institución eliminada"
+                    confirm={`¿Eliminar "${i.nombre}"?`}
+                    className="border-t border-border px-4 py-2"
+                  >
                     <input type="hidden" name="id" value={i.id} />
                     <button type="submit" className="text-xs font-medium text-red-600 hover:underline">
                       Eliminar
                     </button>
-                  </form>
+                  </ToastForm>
                 </details>
               </li>
             ))}

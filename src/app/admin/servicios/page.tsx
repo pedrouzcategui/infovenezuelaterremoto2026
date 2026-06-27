@@ -5,6 +5,7 @@ import { CATEGORIAS_SERVICIO, COSTOS, ZONAS } from "@/lib/types";
 import { AdminNav } from "../AdminNav";
 import { actualizarServicio, eliminarServicio } from "../actions";
 import { ServicioForm } from "./ServicioForm";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +57,7 @@ export default async function AdminServiciosPage() {
                     </span>
                   </summary>
 
-                  <form action={actualizarServicio} className="space-y-3 border-t border-border p-4">
+                  <ToastForm action={actualizarServicio} successMsg="Servicio actualizado ✅" className="space-y-3 border-t border-border p-4">
                     <input type="hidden" name="id" value={s.id} />
                     <div className="grid gap-3 sm:grid-cols-2">
                       <input name="nombre" defaultValue={s.nombre} className={cls} />
@@ -118,15 +119,19 @@ export default async function AdminServiciosPage() {
                     <button type="submit" className="rounded-none bg-strong px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
                       Guardar
                     </button>
-                  </form>
+                  </ToastForm>
 
                   <div className="flex gap-4 border-t border-border px-4 py-2">
-                    <form action={eliminarServicio}>
+                    <ToastForm
+                      action={eliminarServicio}
+                      successMsg="Servicio eliminado"
+                      confirm={`¿Eliminar "${s.nombre}"?`}
+                    >
                       <input type="hidden" name="id" value={s.id} />
                       <button type="submit" className="text-xs font-medium text-red-600 hover:underline">
                         Eliminar
                       </button>
-                    </form>
+                    </ToastForm>
                   </div>
                 </details>
               </li>

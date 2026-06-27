@@ -4,6 +4,7 @@ import type { PaisAyuda } from "@/lib/types";
 import { AdminNav } from "../AdminNav";
 import { actualizarPais, eliminarPais } from "../actions";
 import { PaisForm } from "./PaisForm";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,7 @@ export default async function AdminPaisesPage() {
                     )}
                   </summary>
 
-                  <form action={actualizarPais} className="space-y-3 border-t border-border p-4">
+                  <ToastForm action={actualizarPais} successMsg="País actualizado ✅" className="space-y-3 border-t border-border p-4">
                     <input type="hidden" name="id" value={p.id} />
                     <div className="grid gap-3 sm:grid-cols-[1fr_4rem]">
                       <input name="pais" defaultValue={p.pais} className={cls} />
@@ -83,14 +84,19 @@ export default async function AdminPaisesPage() {
                     <button type="submit" className="bg-strong px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
                       Guardar
                     </button>
-                  </form>
+                  </ToastForm>
 
-                  <form action={eliminarPais} className="border-t border-border px-4 py-2">
+                  <ToastForm
+                    action={eliminarPais}
+                    successMsg="Eliminado"
+                    confirm={`¿Eliminar "${p.pais}"?`}
+                    className="border-t border-border px-4 py-2"
+                  >
                     <input type="hidden" name="id" value={p.id} />
                     <button type="submit" className="text-xs font-medium text-red-600 hover:underline">
                       Eliminar
                     </button>
-                  </form>
+                  </ToastForm>
                 </details>
               </li>
             ))}

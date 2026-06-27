@@ -10,6 +10,7 @@ import {
   reabrirSolicitud,
 } from "../actions";
 import { ConfirmButton } from "../usuarios/ConfirmButton";
+import { ToastForm } from "../../components/ToastForm";
 
 export const dynamic = "force-dynamic";
 
@@ -112,30 +113,30 @@ export default async function AdminSolicitudesPage() {
 
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
                 {(s.estado === "pendiente" || s.estado === "rechazada") && (
-                  <form action={aprobarSolicitud}>
+                  <ToastForm action={aprobarSolicitud} successMsg="Solicitud aprobada ✅">
                     <input type="hidden" name="id" value={s.id} />
                     <button className="bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700">
                       Aprobar
                     </button>
-                  </form>
+                  </ToastForm>
                 )}
                 {s.estado === "aprobada" && (
-                  <form action={completarSolicitud}>
+                  <ToastForm action={completarSolicitud} successMsg="Solicitud completada ✅">
                     <input type="hidden" name="id" value={s.id} />
                     <button className="bg-slate-600 px-3 py-1.5 font-medium text-white hover:bg-slate-700">
                       Marcar completada
                     </button>
-                  </form>
+                  </ToastForm>
                 )}
                 {s.estado === "completada" && (
-                  <form action={reabrirSolicitud}>
+                  <ToastForm action={reabrirSolicitud} successMsg="Solicitud reabierta ✅">
                     <input type="hidden" name="id" value={s.id} />
                     <button className="border border-border px-3 py-1.5 font-medium text-muted hover:bg-surface-2">
                       Reabrir
                     </button>
-                  </form>
+                  </ToastForm>
                 )}
-                <form action={eliminarSolicitud}>
+                <ToastForm action={eliminarSolicitud} successMsg="Solicitud eliminada">
                   <input type="hidden" name="id" value={s.id} />
                   <ConfirmButton
                     message={`¿Eliminar la solicitud "${s.titulo}"? No se puede deshacer.`}
@@ -143,7 +144,7 @@ export default async function AdminSolicitudesPage() {
                   >
                     Eliminar
                   </ConfirmButton>
-                </form>
+                </ToastForm>
               </div>
             </li>
           ))}
