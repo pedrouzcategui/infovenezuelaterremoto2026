@@ -40,7 +40,7 @@ export function CentroCard({ centro }: { centro: Centro }) {
   return (
     <div className="group flex flex-col overflow-hidden border border-border bg-surface transition-colors hover:border-emerald-500/50">
       <Link href={`/centros/${centro.id}`} className="relative block">
-        <div className="aspect-[4/3] w-full overflow-hidden bg-surface-2">
+        <div className="aspect-[16/10] w-full overflow-hidden bg-surface-2">
           {centro.foto_url ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -89,23 +89,23 @@ export function CentroCard({ centro }: { centro: Centro }) {
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3">
         <Link href={`/centros/${centro.id}`}>
-          <h3 className="font-bold uppercase leading-tight tracking-tight text-foreground group-hover:text-emerald-400">
+          <h3 className="line-clamp-2 text-sm font-bold uppercase leading-tight tracking-tight text-foreground group-hover:text-emerald-400">
             {centro.nombre}
           </h3>
         </Link>
-        <p className="mt-1 text-xs text-faint">
+        <p className="mt-1 line-clamp-2 text-xs text-faint">
           {centro.zona}
           {centro.direccion ? ` · ${centro.direccion}` : ""}
         </p>
 
         {necesidades.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-1">
             {necesidades.map((n) => (
               <span
                 key={n}
-                className="bg-amber-500/15 px-2 py-0.5 text-[11px] font-medium text-amber-600 ring-1 ring-amber-500/30"
+                className="bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-600/90 ring-1 ring-amber-500/25"
               >
                 {n}
               </span>
@@ -114,7 +114,7 @@ export function CentroCard({ centro }: { centro: Centro }) {
         )}
 
         {/* Acciones con iconos */}
-        <div className="mt-auto flex items-center gap-2 border-t border-border pt-3">
+        <div className="mt-auto flex items-center gap-1.5 border-t border-border pt-2.5">
           {ig && (
             <a
               href={ig}
@@ -122,7 +122,7 @@ export function CentroCard({ centro }: { centro: Centro }) {
               rel="noopener noreferrer"
               aria-label="Instagram"
               title="Instagram"
-              className="flex h-9 w-9 items-center justify-center bg-gradient-to-br from-fuchsia-600 to-pink-500 text-white hover:opacity-90"
+              className="flex h-8 w-8 items-center justify-center bg-gradient-to-br from-fuchsia-600 to-pink-500 text-white hover:opacity-90"
             >
               <IconInstagram />
             </a>
@@ -134,7 +134,7 @@ export function CentroCard({ centro }: { centro: Centro }) {
               rel="noopener noreferrer"
               aria-label="Cómo llegar"
               title="Cómo llegar"
-              className="flex h-9 w-9 items-center justify-center border border-border text-foreground hover:bg-surface-2"
+              className="flex h-8 w-8 items-center justify-center border border-border text-foreground hover:bg-surface-2"
             >
               <IconMap />
             </a>
@@ -146,14 +146,14 @@ export function CentroCard({ centro }: { centro: Centro }) {
               rel={wa ? "noopener noreferrer" : undefined}
               aria-label="Llamar / WhatsApp"
               title="Llamar / WhatsApp"
-              className="flex h-9 w-9 items-center justify-center border border-border text-foreground hover:bg-surface-2"
+              className="flex h-8 w-8 items-center justify-center border border-border text-foreground hover:bg-surface-2"
             >
               <IconPhone />
             </a>
           )}
           <Link
             href={`/centros/${centro.id}`}
-            className="ml-auto border border-emerald-600 px-3 py-1.5 text-sm font-medium text-emerald-500 hover:bg-emerald-500/10"
+            className="ml-auto border border-emerald-600 px-2.5 py-1 text-xs font-medium text-emerald-500 hover:bg-emerald-500/10"
           >
             Ver centro →
           </Link>
