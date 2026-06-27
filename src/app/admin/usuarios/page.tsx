@@ -4,6 +4,7 @@ import type { Profile } from "@/lib/types";
 import { formatFecha } from "@/lib/format";
 import { AdminNav } from "../AdminNav";
 import { aprobarUsuario, cambiarRol, rechazarUsuario } from "../actions";
+import { ConfirmButton } from "./ConfirmButton";
 
 export const dynamic = "force-dynamic";
 
@@ -83,14 +84,15 @@ export default async function AdminUsuariosPage() {
                     </button>
                   </form>
                 )}
-                {p.estado !== "rechazado" && (
-                  <form action={rechazarUsuario}>
-                    <input type="hidden" name="id" value={p.id} />
-                    <button className="border border-rose-300 px-3 py-1.5 font-medium text-rose-600 hover:bg-rose-50">
-                      Rechazar
-                    </button>
-                  </form>
-                )}
+                <form action={rechazarUsuario}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <ConfirmButton
+                    message={`¿Eliminar a ${p.email ?? "este usuario"}? Se borrará su cuenta por completo. Si vuelve a iniciar sesión, entrará de nuevo como pendiente.`}
+                    className="border border-rose-300 px-3 py-1.5 font-medium text-rose-600 hover:bg-rose-50"
+                  >
+                    Eliminar
+                  </ConfirmButton>
+                </form>
                 <form action={cambiarRol}>
                   <input type="hidden" name="id" value={p.id} />
                   <input

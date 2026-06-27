@@ -485,10 +485,12 @@ export async function aprobarUsuario(formData: FormData): Promise<void> {
 
 export async function rechazarUsuario(formData: FormData): Promise<void> {
   await requireAdmin();
-  await supabaseAdmin()
-    .from("profiles")
-    .update({ estado: "rechazado" })
-    .eq("id", formData.get("id") as string);
+  const id = formData.get("id") as string;
+  const supabase = supabaseAdmin();
+  // Elimina la cuenta de Auth; el perfil se borra en cascada.
+  const { error } = await supabase.auth.admin.deleteUser(id);
+  // Respaldo: si no se pudo borrar el usuario de Auth, al menos quita el perfil.
+  if (error) await supabase.from("profiles").delete().eq("id", id);
   revalidatePath("/admin/usuarios");
 }
 
