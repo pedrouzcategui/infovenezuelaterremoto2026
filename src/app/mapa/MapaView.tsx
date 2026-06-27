@@ -85,18 +85,16 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
     return lista.map((g) => ({ ...g, count: counts.get(g.grupo) ?? 0 }));
   }, [puntos]);
 
-  // Conjunto de grupos OCULTOS (vacío = todo visible).
-  const [ocultos, setOcultos] = useState<Set<string>>(new Set());
+  // Grupo seleccionado para ver SOLO ese (null = ver todos).
+  const [seleccion, setSeleccion] = useState<string | null>(null);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
-  const visibles = puntos.filter((p) => !ocultos.has(p.grupo));
+  const visibles = seleccion
+    ? puntos.filter((p) => p.grupo === seleccion)
+    : puntos;
 
-  function toggleGrupo(grupo: string) {
-    setOcultos((prev) => {
-      const next = new Set(prev);
-      if (next.has(grupo)) next.delete(grupo);
-      else next.add(grupo);
-      return next;
-    });
+  function elegirGrupo(grupo: string) {
+    // Click en el mismo grupo lo deselecciona (vuelve a "todos").
+    setSeleccion((prev) => (prev === grupo ? null : grupo));
   }
 
   // Asegura que los tiles llenen el contenedor (al montar y al redimensionar).
@@ -266,19 +264,31 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
             filtrosAbiertos ? "block" : "hidden"
           } md:block`}
         >
-          <div className="border-b border-[#1e2735] px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-emerald-400">
-            Filtrar en el mapa
+          <div className="flex items-center justify-between gap-2 border-b border-[#1e2735] px-3 py-2">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400">
+              Filtrar en el mapa
+            </span>
+            {seleccion && (
+              <button
+                onClick={() => setSeleccion(null)}
+                className="font-mono text-[10px] uppercase tracking-wide text-emerald-400 underline hover:text-emerald-300"
+              >
+                Ver todos
+              </button>
+            )}
           </div>
           <div className="p-1">
             {grupos.map((g) => {
-              const on = !ocultos.has(g.grupo);
+              // Activo = visible. Con selección, solo el elegido está activo.
+              const on = !seleccion || seleccion === g.grupo;
+              const elegido = seleccion === g.grupo;
               return (
                 <button
                   key={g.grupo}
-                  onClick={() => toggleGrupo(g.grupo)}
+                  onClick={() => elegirGrupo(g.grupo)}
                   className={`flex w-full items-center gap-2 px-2 py-1.5 text-left font-mono text-[11px] uppercase tracking-wide ${
                     on ? "text-white" : "text-white/35"
-                  } hover:bg-white/5`}
+                  } ${elegido ? "bg-white/10" : "hover:bg-white/5"}`}
                 >
                   <span
                     className="inline-block h-3 w-3 shrink-0 border"
