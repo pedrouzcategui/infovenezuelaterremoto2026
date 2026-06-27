@@ -399,3 +399,7 @@ alter table public.solicitudes enable row level security;
 drop policy if exists "solicitudes: lectura pública" on public.solicitudes;
 create policy "solicitudes: lectura pública"
   on public.solicitudes for select using (estado = 'aprobada');
+
+-- v18: el correo es opcional (el admin puede publicar solicitudes
+-- directamente, sin el proceso de verificación por correo).
+alter table public.solicitudes alter column email drop not null;

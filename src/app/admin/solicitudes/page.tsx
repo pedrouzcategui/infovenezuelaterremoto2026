@@ -11,6 +11,7 @@ import {
 } from "../actions";
 import { ConfirmButton } from "../usuarios/ConfirmButton";
 import { ToastForm } from "../../components/ToastForm";
+import { SolicitudAdminForm } from "./SolicitudAdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,8 @@ export default async function AdminSolicitudesPage() {
   return (
     <div className="space-y-6">
       <AdminNav active="solicitudes" />
+
+      <SolicitudAdminForm />
 
       <div>
         <h1 className="text-xl font-bold text-foreground">

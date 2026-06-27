@@ -21,6 +21,7 @@ import {
   CATEGORIAS_ANUNCIO,
   CATEGORIAS_SERVICIO,
   NIVELES_CONFIANZA,
+  SOLICITUD_TIPOS,
   TIPOS_CENTRO,
   ZONAS,
   type CategoriaAnuncio,
@@ -205,6 +206,7 @@ export async function crearCentro(
   if (error) return { error: `No se pudo crear: ${error.message}` };
   revalidatePath("/admin/centros");
   revalidatePath("/");
+  revalidatePath("/centros");
   return { ok: true };
 }
 
@@ -227,6 +229,7 @@ export async function actualizarCentro(formData: FormData): Promise<void> {
   if (error) throw new Error(`No se pudo actualizar el centro: ${error.message}`);
   revalidatePath("/admin/centros");
   revalidatePath("/");
+  revalidatePath("/centros");
   revalidatePath(`/centros/${id}`);
 }
 
@@ -235,6 +238,7 @@ export async function eliminarCentro(formData: FormData): Promise<void> {
   await supabaseAdmin().from("centros").delete().eq("id", formData.get("id") as string);
   revalidatePath("/admin/centros");
   revalidatePath("/");
+  revalidatePath("/centros");
 }
 
 // ---------- Servicios ----------
@@ -505,6 +509,39 @@ export async function cambiarRol(formData: FormData): Promise<void> {
 }
 
 // ---------- Solicitudes públicas ----------
+
+/** El admin crea y publica una solicitud directamente (sin captcha ni OTP). */
+export async function crearSolicitudAdmin(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  await requireAprobado();
+  const tipo = str(formData, "tipo");
+  const titulo = str(formData, "titulo");
+  const nombre = str(formData, "nombre");
+  if (!tipo || !(SOLICITUD_TIPOS as readonly string[]).includes(tipo))
+    return { error: "Selecciona un tipo de solicitud." };
+  if (!titulo) return { error: "El título es obligatorio." };
+  if (!nombre) return { error: "Indica quién hace la solicitud." };
+
+  const { error } = await supabaseAdmin().from("solicitudes").insert({
+    tipo,
+    titulo,
+    descripcion: str(formData, "descripcion"),
+    nombre,
+    email: str(formData, "email"),
+    telefono: str(formData, "telefono"),
+    whatsapp: str(formData, "whatsapp"),
+    zona: str(formData, "zona"),
+    ubicacion: str(formData, "ubicacion"),
+    email_verificado: true,
+    estado: "aprobada",
+  });
+  if (error) return { error: `No se pudo crear: ${error.message}` };
+  revalidatePath("/admin/solicitudes");
+  revalidatePath("/solicitudes");
+  return { ok: true };
+}
 
 export async function aprobarSolicitud(formData: FormData): Promise<void> {
   await requireAprobado();
