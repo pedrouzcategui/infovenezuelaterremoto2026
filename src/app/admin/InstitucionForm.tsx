@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { crearInstitucion, type FormState } from "./actions";
+import { useActionToast } from "@/app/components/useActionToast";
 
 export function InstitucionForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -12,20 +13,11 @@ export function InstitucionForm() {
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state.ok]);
+  useActionToast(state, "Institución agregada ✅");
 
   return (
     <form ref={ref} action={action} className="space-y-3 border border-border bg-surface p-4">
       <h2 className="font-semibold text-foreground">Agregar institución</h2>
-      {state.error && (
-        <p className="bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
-          {state.error}
-        </p>
-      )}
-      {state.ok && (
-        <p className="bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">
-          Institución agregada. ✅
-        </p>
-      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <input name="nombre" required placeholder="Nombre *" className={cls} />

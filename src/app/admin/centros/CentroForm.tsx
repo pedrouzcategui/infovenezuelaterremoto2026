@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { NIVELES_CONFIANZA, TIPOS_CENTRO, ZONAS } from "@/lib/types";
 import { crearCentro, type FormState } from "../actions";
+import { useActionToast } from "@/app/components/useActionToast";
 
 export function CentroForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -14,6 +15,7 @@ export function CentroForm() {
   useEffect(() => {
     if (state.ok) formRef.current?.reset();
   }, [state.ok]);
+  useActionToast(state, "Centro agregado ✅");
 
   return (
     <form
@@ -22,17 +24,6 @@ export function CentroForm() {
       className="space-y-3 rounded-none border border-border bg-surface p-4"
     >
       <h2 className="font-semibold text-foreground">Agregar centro</h2>
-
-      {state.error && (
-        <p className="rounded-none bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
-          {state.error}
-        </p>
-      )}
-      {state.ok && (
-        <p className="rounded-none bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">
-          Centro agregado. ✅
-        </p>
-      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <input name="nombre" required placeholder="Nombre del centro *" className={cls} />

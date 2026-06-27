@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { crearPais, type FormState } from "../actions";
+import { useActionToast } from "@/app/components/useActionToast";
 
 export function PaisForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -12,6 +13,7 @@ export function PaisForm() {
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state.ok]);
+  useActionToast(state, "Guardado ✅");
 
   return (
     <form
@@ -20,16 +22,6 @@ export function PaisForm() {
       className="space-y-3 border border-border bg-surface p-4"
     >
       <h2 className="font-semibold text-foreground">Agregar país / institución</h2>
-      {state.error && (
-        <p className="bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
-          {state.error}
-        </p>
-      )}
-      {state.ok && (
-        <p className="bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">
-          Guardado. ✅
-        </p>
-      )}
 
       <div className="grid gap-3 sm:grid-cols-[1fr_4rem]">
         <input name="pais" required placeholder="País o institución *" className={cls} />

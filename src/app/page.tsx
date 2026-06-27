@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getCentros, getInstituciones, getServicios } from "@/lib/data";
-import { ZONAS } from "@/lib/types";
-import { CentroCard } from "./components/CentroCard";
+import { HomeCentros } from "./components/HomeCentros";
 
 export const dynamic = "force-dynamic";
 
@@ -110,33 +109,8 @@ export default async function Home() {
       </section>
 
       {/* DIRECTORIO DE CENTROS */}
-      <section id="centros" className="scroll-mt-20 space-y-6">
-        <h2 className="font-mono text-xs uppercase tracking-widest text-faint">
-          Centros de acopio
-        </h2>
-
-        {centros.length === 0 ? (
-          <p className="border border-dashed border-border bg-surface p-6 text-center text-faint">
-            Todavía no hay centros publicados. Vuelve pronto.
-          </p>
-        ) : (
-          ZONAS.map((zona) => {
-            const delZona = centros.filter((c) => c.zona === zona);
-            if (delZona.length === 0) return null;
-            return (
-              <div key={zona}>
-                <h3 className="mb-3 text-xl font-bold uppercase tracking-tight text-foreground">
-                  {zona}
-                </h3>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {delZona.map((c) => (
-                    <CentroCard key={c.id} centro={c} />
-                  ))}
-                </div>
-              </div>
-            );
-          })
-        )}
+      <section id="centros" className="scroll-mt-20">
+        <HomeCentros centros={centros} />
       </section>
     </div>
   );

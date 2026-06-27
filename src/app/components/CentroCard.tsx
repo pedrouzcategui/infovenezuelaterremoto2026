@@ -56,22 +56,22 @@ export function CentroCard({ centro }: { centro: Centro }) {
         </div>
         {/* Degradado para que las insignias se lean sobre fotos claras */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/60 via-black/25 to-transparent" />
-        <div className="absolute left-2 top-2 flex flex-wrap gap-1.5">
+        <div className="absolute left-3 right-3 top-3 flex flex-wrap gap-1.5">
           {centro.patrocinado && (
-            <span className="bg-gradient-to-r from-amber-300 to-yellow-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(251,191,36,0.6)]">
+            <span className="bg-gradient-to-r from-amber-300 to-yellow-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(251,191,36,0.6)]">
               ⭐ Patrocinado
             </span>
           )}
           {centro.confianza && (
             <span
-              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${confianzaMeta(centro.confianza).badge}`}
+              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${confianzaMeta(centro.confianza).badge}`}
             >
               {confianzaMeta(centro.confianza).emoji} {centro.confianza}
             </span>
           )}
           {centro.tipo && (
             <span
-              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${centroTipoMeta(centro.tipo).badge}`}
+              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${centroTipoMeta(centro.tipo).badge}`}
             >
               {centroTipoMeta(centro.tipo).emoji} {centro.tipo}
             </span>

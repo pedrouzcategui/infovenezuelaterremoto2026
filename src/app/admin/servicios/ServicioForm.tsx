@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { CATEGORIAS_SERVICIO, COSTOS, ZONAS } from "@/lib/types";
 import { crearServicio, type FormState } from "../actions";
+import { useActionToast } from "@/app/components/useActionToast";
 
 export function ServicioForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -13,6 +14,7 @@ export function ServicioForm() {
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state.ok]);
+  useActionToast(state, "Servicio agregado ✅");
 
   return (
     <form
@@ -21,16 +23,6 @@ export function ServicioForm() {
       className="space-y-3 rounded-none border border-border bg-surface p-4"
     >
       <h2 className="font-semibold text-foreground">Agregar servicio</h2>
-      {state.error && (
-        <p className="rounded-none bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
-          {state.error}
-        </p>
-      )}
-      {state.ok && (
-        <p className="rounded-none bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">
-          Servicio agregado. ✅
-        </p>
-      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <input name="nombre" required placeholder="Nombre *" className={cls} />

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { CATEGORIAS_ANUNCIO } from "@/lib/types";
 import { ANUNCIO_META } from "@/lib/labels";
 import { crearAnuncio, type FormState } from "../actions";
+import { useActionToast } from "@/app/components/useActionToast";
 
 export function AnuncioForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -14,6 +15,7 @@ export function AnuncioForm() {
   useEffect(() => {
     if (state.ok) ref.current?.reset();
   }, [state.ok]);
+  useActionToast(state, "Anuncio publicado ✅");
 
   return (
     <form
@@ -22,16 +24,6 @@ export function AnuncioForm() {
       className="space-y-3 rounded-none border border-border bg-surface p-4"
     >
       <h2 className="font-semibold text-foreground">Publicar anuncio</h2>
-      {state.error && (
-        <p className="rounded-none bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-200">
-          {state.error}
-        </p>
-      )}
-      {state.ok && (
-        <p className="rounded-none bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">
-          Anuncio publicado. ✅
-        </p>
-      )}
 
       <input name="titulo" required placeholder="Título *" className={cls} />
       <textarea

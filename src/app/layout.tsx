@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { SiteHeader } from "./components/SiteHeader";
 import { Footer } from "./components/Footer";
@@ -75,6 +76,7 @@ export default function RootLayout({
         </main>
 
         <Footer />
+        <Toaster position="top-center" theme="dark" richColors closeButton />
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       </body>
     </html>
