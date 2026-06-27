@@ -27,13 +27,21 @@ export default async function ServiciosPage({
 
   return (
     <div className="mx-[calc(50%-50vw)] w-screen space-y-5 px-4 sm:px-6 lg:px-8">
-      <div>
-        <h1 className="text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl">
-          Directorio de servicios
-        </h1>
-        <p className="mt-1 text-sm text-muted">
-          Farmacias, servicios médicos, transporte y más.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl">
+            Directorio de servicios
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Farmacias, servicios médicos, transporte y más.
+          </p>
+        </div>
+        <Link
+          href="/servicios/proponer"
+          className="shrink-0 bg-emerald-500 px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wide text-black hover:bg-emerald-400"
+        >
+          + Proponer un servicio
+        </Link>
       </div>
 
       <div className="md:grid md:grid-cols-[230px_1fr] md:gap-6">
