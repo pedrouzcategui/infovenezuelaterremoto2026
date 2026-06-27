@@ -188,12 +188,11 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
             }}
           >
             <Tooltip direction="top" offset={[0, -14]} opacity={1}>
-              <div style={{ width: 200 }}>
+              <div style={{ width: 208 }}>
                 <div
                   style={{
                     width: "100%",
-                    height: 104,
-                    marginBottom: 8,
+                    height: 110,
                     background: "#161d28",
                     overflow: "hidden",
                     display: "flex",
@@ -212,15 +211,30 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
                     <span style={{ fontSize: 30, opacity: 0.4 }}>{p.emoji}</span>
                   )}
                 </div>
-                <strong style={{ display: "block" }}>{p.nombre}</strong>
-                {p.detalle && (
-                  <span style={{ color: "#9aa7ba" }}>{p.detalle}</span>
-                )}
-                {p.href && (
-                  <span style={{ display: "block", color: "#34d399", marginTop: 4 }}>
-                    {p.hrefLabel ?? "Clic para ver"} →
-                  </span>
-                )}
+                <div style={{ padding: "9px 11px 11px" }}>
+                  <strong style={{ display: "block", lineHeight: 1.25 }}>
+                    {p.nombre}
+                  </strong>
+                  {p.detalle && (
+                    <span
+                      style={{
+                        display: "block",
+                        marginTop: 4,
+                        color: "#9aa7ba",
+                        lineHeight: 1.35,
+                      }}
+                    >
+                      {p.detalle}
+                    </span>
+                  )}
+                  {p.href && (
+                    <span
+                      style={{ display: "block", color: "#34d399", marginTop: 7 }}
+                    >
+                      {p.hrefLabel ?? "Clic para ver"} →
+                    </span>
+                  )}
+                </div>
               </div>
             </Tooltip>
           </Marker>

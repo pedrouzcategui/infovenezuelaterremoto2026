@@ -150,14 +150,17 @@ body {
 .leaflet-tooltip {
   background: #0e131b !important;
   color: #e6ecf5 !important;
-  border: 1px solid #1e2735 !important;
+  border: 1px solid #38465c !important;
   border-radius: 0 !important;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85) !important;
   font-family: var(--font-mono);
   font-size: 11px;
+  padding: 0 !important;
+  overflow: hidden;
+  white-space: normal !important;
 }
 .leaflet-tooltip-top::before {
-  border-top-color: #1e2735 !important;
+  border-top-color: #38465c !important;
 }
 .leaflet-control-attribution {
   background: rgba(7, 10, 15, 0.7) !important;
