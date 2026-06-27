@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Centro } from "@/lib/types";
 import { instagramLink, whatsappLink } from "@/lib/format";
-import { CENTRO_TIPO_META, CONFIANZA_META } from "@/lib/labels";
+import { centroTipoMeta, confianzaMeta } from "@/lib/labels";
 
 function IconInstagram() {
   return (
@@ -64,16 +64,16 @@ export function CentroCard({ centro }: { centro: Centro }) {
           )}
           {centro.confianza && (
             <span
-              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${CONFIANZA_META[centro.confianza].badge}`}
+              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${confianzaMeta(centro.confianza).badge}`}
             >
-              {CONFIANZA_META[centro.confianza].emoji} {centro.confianza}
+              {confianzaMeta(centro.confianza).emoji} {centro.confianza}
             </span>
           )}
           {centro.tipo && (
             <span
-              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${CENTRO_TIPO_META[centro.tipo].badge}`}
+              className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${centroTipoMeta(centro.tipo).badge}`}
             >
-              {CENTRO_TIPO_META[centro.tipo].emoji} {centro.tipo}
+              {centroTipoMeta(centro.tipo).emoji} {centro.tipo}
             </span>
           )}
         </div>

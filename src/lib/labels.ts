@@ -69,6 +69,21 @@ export const CONFIANZA_META: Record<
   },
 };
 
+const TIPO_FALLBACK = { emoji: "📍", badge: "bg-slate-100 text-slate-700 ring-slate-200" };
+const CONFIANZA_FALLBACK = { emoji: "•", badge: "bg-slate-100 text-slate-600 ring-slate-200" };
+
+/** Insignia de tipo de centro, resiliente a valores no mapeados. */
+export function centroTipoMeta(tipo: string | null | undefined) {
+  if (!tipo) return TIPO_FALLBACK;
+  return CENTRO_TIPO_META[tipo as TipoCentro] ?? TIPO_FALLBACK;
+}
+
+/** Insignia de nivel de confianza, resiliente a valores no mapeados. */
+export function confianzaMeta(conf: string | null | undefined) {
+  if (!conf) return CONFIANZA_FALLBACK;
+  return CONFIANZA_META[conf as NivelConfianza] ?? CONFIANZA_FALLBACK;
+}
+
 /** Estilo visual por categoría de anuncio. `card` = estilo del recuadro. */
 export const ANUNCIO_META: Record<
   CategoriaAnuncio,

@@ -214,7 +214,7 @@ export async function actualizarCentro(formData: FormData): Promise<void> {
   const zona = (str(formData, "zona") ?? "") as Zona;
   const foto_url = await uploadImagen(formData, "foto", "centros");
   const patrocinador_logo = await uploadImagen(formData, "patrocinador_logo", "centros");
-  await supabaseAdmin()
+  const { error } = await supabaseAdmin()
     .from("centros")
     .update({
       ...centroFields(formData),
@@ -224,6 +224,7 @@ export async function actualizarCentro(formData: FormData): Promise<void> {
       activo: bool(formData, "activo"),
     })
     .eq("id", id);
+  if (error) throw new Error(`No se pudo actualizar el centro: ${error.message}`);
   revalidatePath("/admin/centros");
   revalidatePath("/");
   revalidatePath(`/centros/${id}`);

@@ -1,4 +1,4 @@
-import { CENTRO_TIPO_META, CONFIANZA_META } from "@/lib/labels";
+import { centroTipoMeta, confianzaMeta } from "@/lib/labels";
 import type { Centro } from "@/lib/types";
 
 export function CentroBadges({
@@ -20,16 +20,16 @@ export function CentroBadges({
       )}
       {confianza && (
         <span
-          className={`inline-flex items-center gap-1 rounded-none px-2 py-0.5 text-xs font-medium ring-1 ${CONFIANZA_META[confianza].badge}`}
+          className={`inline-flex items-center gap-1 rounded-none px-2 py-0.5 text-xs font-medium ring-1 ${confianzaMeta(confianza).badge}`}
         >
-          {CONFIANZA_META[confianza].emoji} {confianza}
+          {confianzaMeta(confianza).emoji} {confianza}
         </span>
       )}
       {tipo && (
         <span
-          className={`inline-flex items-center gap-1 rounded-none px-2 py-0.5 text-xs font-medium ring-1 ${CENTRO_TIPO_META[tipo].badge}`}
+          className={`inline-flex items-center gap-1 rounded-none px-2 py-0.5 text-xs font-medium ring-1 ${centroTipoMeta(tipo).badge}`}
         >
-          {CENTRO_TIPO_META[tipo].emoji} {tipo}
+          {centroTipoMeta(tipo).emoji} {tipo}
         </span>
       )}
     </div>
