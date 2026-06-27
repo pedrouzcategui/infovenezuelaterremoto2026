@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Centro } from "@/lib/types";
 import { formatHorario, instagramLink, whatsappLink } from "@/lib/format";
 import { centroTipoMeta, confianzaMeta } from "@/lib/labels";
@@ -37,6 +38,35 @@ export function CentroCard({ centro }: { centro: Centro }) {
     .filter(Boolean)
     .slice(0, 3);
 
+  const badgeCls = "px-2 py-1 text-[10px] font-bold uppercase tracking-wide";
+  const badges: ReactNode[] = [];
+  if (centro.fijado)
+    badges.push(
+      <span key="fijado" className={`${badgeCls} bg-foreground text-background ring-1 ring-white/40`}>
+        📌 Fijado
+      </span>,
+    );
+  if (centro.patrocinado)
+    badges.push(
+      <span key="patro" className={`${badgeCls} bg-gradient-to-r from-amber-300 to-yellow-500 text-black shadow-[0_0_12px_rgba(251,191,36,0.6)]`}>
+        ⭐ Patrocinado
+      </span>,
+    );
+  if (centro.confianza)
+    badges.push(
+      <span key="conf" className={`${badgeCls} ring-1 ${confianzaMeta(centro.confianza).badge}`}>
+        {confianzaMeta(centro.confianza).emoji} {centro.confianza}
+      </span>,
+    );
+  if (centro.tipo)
+    badges.push(
+      <span key="tipo" className={`${badgeCls} ring-1 ${centroTipoMeta(centro.tipo).badge}`}>
+        {centroTipoMeta(centro.tipo).emoji} {centro.tipo}
+      </span>,
+    );
+  const badgesVisibles = badges.slice(0, 3);
+  const badgesOcultos = badges.length - badgesVisibles.length;
+
   return (
     <div className="group flex flex-col overflow-hidden border border-border bg-surface transition-colors hover:border-emerald-500/50">
       <Link href={`/centros/${centro.id}`} className="relative block">
@@ -56,29 +86,11 @@ export function CentroCard({ centro }: { centro: Centro }) {
         </div>
         {/* Degradado para que las insignias se lean sobre fotos claras */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/60 via-black/25 to-transparent" />
-        <div className="absolute left-3 right-3 top-3 flex flex-wrap gap-1.5">
-          {centro.fijado && (
-            <span className="bg-foreground px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-background ring-1 ring-white/40">
-              📌 Fijado
-            </span>
-          )}
-          {centro.patrocinado && (
-            <span className="bg-gradient-to-r from-amber-300 to-yellow-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(251,191,36,0.6)]">
-              ⭐ Patrocinado
-            </span>
-          )}
-          {centro.confianza && (
-            <span
-              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${confianzaMeta(centro.confianza).badge}`}
-            >
-              {confianzaMeta(centro.confianza).emoji} {centro.confianza}
-            </span>
-          )}
-          {centro.tipo && (
-            <span
-              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${centroTipoMeta(centro.tipo).badge}`}
-            >
-              {centroTipoMeta(centro.tipo).emoji} {centro.tipo}
+        <div className="absolute left-3 right-3 top-3 flex flex-nowrap items-center gap-1.5 overflow-hidden">
+          {badgesVisibles}
+          {badgesOcultos > 0 && (
+            <span className={`${badgeCls} shrink-0 bg-black/70 text-white ring-1 ring-white/30`}>
+              …
             </span>
           )}
         </div>
