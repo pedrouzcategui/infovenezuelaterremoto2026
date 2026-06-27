@@ -1,26 +1,168 @@
 @import "tailwindcss";
 
+/* Modo oscuro por clase .dark (toggle manual). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --foreground: #0c1320;
+  --muted: #4a5568;
+  --faint: #8a93a3;
+  --border: #dfe3ea;
+  --strong: #0c1320;
+}
+
+.dark {
+  --background: #070a0f;
+  --surface: #0e131b;
+  --surface-2: #161d28;
+  --foreground: #e6ecf5;
+  --muted: #9aa7ba;
+  --faint: #5f6c80;
+  --border: #1e2735;
+  --strong: #1e2735;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-border: var(--border);
+  --color-strong: var(--strong);
+  --font-sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui,
+    sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo,
+    Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Rejilla tipo HUD para fondos oscuros. */
+.grid-overlay {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Radar de búsqueda y rescate (latido). */
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.25);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+.radar {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.radar__sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(52, 211, 153, 0) 0deg,
+    rgba(52, 211, 153, 0) 295deg,
+    rgba(52, 211, 153, 0.28) 360deg
+  );
+  animation: radar-spin 4s linear infinite;
+}
+.radar__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(52, 211, 153, 0.16);
+}
+.radar__ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  animation: radar-ping 3.5s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .radar__sweep,
+  .radar__ping {
+    animation: none;
+  }
+}
+
+/* --- Leaflet en modo táctico oscuro --- */
+.leaflet-container {
+  background: #070a0f !important;
+  font-family: var(--font-mono);
+}
+.leaflet-div-icon.ca-pin {
+  background: transparent;
+  border: 0;
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: #0e131b;
+  color: #cbd5e1;
+  border-color: #1e2735;
+}
+.leaflet-bar a:hover {
+  background: #161d28;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #0e131b;
+  color: #e6ecf5;
+  border: 1px solid #1e2735;
+  border-radius: 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+}
+.leaflet-popup-content a {
+  color: #34d399;
+}
+.leaflet-tooltip {
+  background: #0e131b !important;
+  color: #e6ecf5 !important;
+  border: 1px solid #1e2735 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6) !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.leaflet-tooltip-top::before {
+  border-top-color: #1e2735 !important;
+}
+.leaflet-control-attribution {
+  background: rgba(7, 10, 15, 0.7) !important;
+  color: #5f6c80 !important;
+}
+.leaflet-control-attribution a {
+  color: #7c889b !important;
 }

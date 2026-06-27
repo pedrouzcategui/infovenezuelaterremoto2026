@@ -1,0 +1,33 @@
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
+
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const anonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+
+/**
+ * Cliente de Supabase ligado a la sesión (cookies) del usuario.
+ * Úsalo en Server Components / Server Actions para leer el usuario autenticado.
+ */
+export async function supabaseServerAuth() {
+  const cookieStore = await cookies();
+  return createServerClient(url, anonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(toSet) {
+        // En render de Server Components no se pueden escribir cookies;
+        // el proxy.ts se encarga de refrescar la sesión.
+        try {
+          toSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options),
+          );
+        } catch {
+          /* no-op durante render */
+        }
+      },
+    },
+  });
+}

@@ -1,65 +1,143 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getCentros, getInstituciones, getServicios } from "@/lib/data";
+import { ZONAS } from "@/lib/types";
+import { CentroCard } from "./components/CentroCard";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+const TILES = [
+  { href: "/mapa", emoji: "🗺️", title: "Mapa en vivo", desc: "Centros y servicios ubicados cerca de ti." },
+  { href: "/servicios", emoji: "🧰", title: "Servicios gratuitos", desc: "Farmacias, médicos, transporte y más." },
+  { href: "/anuncios", emoji: "📣", title: "Anuncios", desc: "Avisos oficiales, extraoficiales y rumores." },
+  { href: "/paises", emoji: "🌍", title: "Ayuda internacional", desc: "Países e instituciones que ayudan." },
+  { href: "/donaciones", emoji: "🏛️", title: "Donar dinero", desc: "Instituciones oficiales para donar." },
+  { href: "tel:911", emoji: "🚨", title: "Emergencias · 911", desc: "Línea nacional de emergencia." },
+];
+
+export default async function Home() {
+  const [centros, servicios, instituciones] = await Promise.all([
+    getCentros(),
+    getServicios(),
+    getInstituciones(),
+  ]);
+
+  const stats = [
+    { n: centros.length, label: "Centros" },
+    { n: servicios.length, label: "Servicios" },
+    { n: instituciones.length, label: "Instituciones" },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="space-y-12">
+      {/* HERO — pantalla completa con radar detrás del menú */}
+      <section className="relative -mt-20 flex min-h-screen w-screen mx-[calc(50%-50vw)] items-center overflow-hidden border-b border-white/10 bg-[#070a0f] text-white">
+        {/* Rejilla + radar de búsqueda y rescate */}
+        <div className="grid-overlay absolute inset-0" />
+        <div
+          className="radar left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-70"
+          style={{ width: "min(95vw, 760px)", height: "min(95vw, 760px)" }}
+        >
+          <div className="radar__ring" />
+          <div className="radar__ring" style={{ inset: "20%" }} />
+          <div className="radar__ring" style={{ inset: "40%" }} />
+          <div className="radar__sweep" />
+          <div className="radar__ping" />
+          <div className="radar__ping" style={{ animationDelay: "1.75s" }} />
+        </div>
+
+        <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-4 py-16 text-center sm:py-24">
+          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400">
+            <span className="inline-block h-2 w-2 animate-pulse bg-emerald-400" />
+            Sismo Venezuela · Junio 2026 · Datos en vivo
+          </div>
+
+          <h1 className="mt-6 text-4xl font-extrabold uppercase leading-[1.02] tracking-tight sm:text-6xl">
+            Centros verificados,{" "}
+            <span className="text-emerald-400">ayuda garantizada</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="mt-6 max-w-2xl text-base text-white/65 sm:text-lg">
+            Listas de centros de acopio, números de emergencia, servicios gratuitos y
+            noticias durante el terremoto de Venezuela de junio 2026.
           </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3 font-mono text-xs font-bold uppercase tracking-wider">
+            <Link href="#centros" className="bg-emerald-500 px-5 py-3 text-black hover:bg-emerald-400">
+              Ver centros
+            </Link>
+            <Link href="/mapa" className="border border-white/25 px-5 py-3 text-white hover:bg-white/10">
+              Ver el mapa
+            </Link>
+            <Link href="/como-donar" className="border border-white/25 px-5 py-3 text-white hover:bg-white/10">
+              Cómo donar
+            </Link>
+          </div>
+
+          {/* Stats en vivo */}
+          <div className="mt-12 grid w-full max-w-lg grid-cols-3 gap-px border border-white/15 bg-white/15 font-mono">
+            {stats.map((s) => (
+              <div key={s.label} className="bg-[#070a0f] px-4 py-3">
+                <div className="text-2xl font-extrabold text-white">{s.n}</div>
+                <div className="mt-0.5 text-[10px] uppercase tracking-widest text-white/45">
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ACCESO RÁPIDO */}
+      <section>
+        <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-faint">
+          Acceso rápido
+        </h2>
+        <div className="grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+          {TILES.map((t) => (
+            <Link
+              key={t.href}
+              href={t.href}
+              className="bg-surface p-5 transition-colors hover:bg-surface-2"
+            >
+              <div className="text-2xl">{t.emoji}</div>
+              <div className="mt-2 font-bold uppercase tracking-wide text-foreground">
+                {t.title}
+              </div>
+              <p className="mt-1 text-sm text-muted">{t.desc}</p>
+            </Link>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* DIRECTORIO DE CENTROS */}
+      <section id="centros" className="scroll-mt-20 space-y-6">
+        <h2 className="font-mono text-xs uppercase tracking-widest text-faint">
+          Centros de acopio
+        </h2>
+
+        {centros.length === 0 ? (
+          <p className="border border-dashed border-border bg-surface p-6 text-center text-faint">
+            Todavía no hay centros publicados. Vuelve pronto.
+          </p>
+        ) : (
+          ZONAS.map((zona) => {
+            const delZona = centros.filter((c) => c.zona === zona);
+            if (delZona.length === 0) return null;
+            return (
+              <div key={zona}>
+                <h3 className="mb-3 text-xl font-bold uppercase tracking-tight text-foreground">
+                  {zona}
+                </h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {delZona.map((c) => (
+                    <CentroCard key={c.id} centro={c} />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </section>
     </div>
   );
 }
