@@ -3,6 +3,18 @@
 /* Modo oscuro por clase .dark (toggle manual). */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Marquesina del banner superior. */
+@keyframes ca-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: ca-marquee 28s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+}
+
 :root {
   --background: #f7f8fa;
   --surface: #ffffff;

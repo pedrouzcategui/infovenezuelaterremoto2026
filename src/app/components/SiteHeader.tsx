@@ -27,6 +27,18 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-[1100] border-b border-border/60 bg-background/55 backdrop-blur-xl">
+      {/* Banner animado (Yummy) */}
+      <div className="overflow-hidden bg-gradient-to-r from-[#7c3aed] to-[#a855f7]">
+        <div className="flex w-max animate-marquee whitespace-nowrap py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span key={i} className="px-8">
+              🚕 Yummy está ofreciendo viajes gratuitos a personal de emergencia
+              y donantes de sangre
+            </span>
+          ))}
+        </div>
+      </div>
+
       <div className="flex w-full items-center justify-between gap-x-5 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
