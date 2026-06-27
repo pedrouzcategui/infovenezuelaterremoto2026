@@ -381,10 +381,16 @@ create table if not exists public.solicitudes (
   ubicacion        text,
   email_verificado boolean not null default false,
   estado           text not null default 'pendiente'
-                     check (estado in ('pendiente', 'aprobada', 'rechazada')),
+                     check (estado in ('pendiente', 'aprobada', 'rechazada', 'completada')),
   created_at       timestamptz not null default now()
 );
 create index if not exists solicitudes_estado_idx on public.solicitudes (estado);
+
+-- v17: estado 'completada' para archivar solicitudes ya resueltas.
+-- (Para bases que ya crearon la tabla con el check anterior.)
+alter table public.solicitudes drop constraint if exists solicitudes_estado_check;
+alter table public.solicitudes add constraint solicitudes_estado_check
+  check (estado in ('pendiente', 'aprobada', 'rechazada', 'completada'));
 
 alter table public.solicitudes enable row level security;
 

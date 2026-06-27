@@ -162,7 +162,7 @@ export interface Solicitud {
   zona: string | null;
   ubicacion: string | null;
   email_verificado: boolean;
-  estado: "pendiente" | "aprobada" | "rechazada";
+  estado: "pendiente" | "aprobada" | "rechazada" | "completada";
   created_at: string;
 }
 

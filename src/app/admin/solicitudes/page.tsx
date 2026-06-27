@@ -3,7 +3,12 @@ import { supabaseAdmin } from "@/lib/supabase";
 import type { Solicitud } from "@/lib/types";
 import { formatFecha } from "@/lib/format";
 import { AdminNav } from "../AdminNav";
-import { aprobarSolicitud, eliminarSolicitud } from "../actions";
+import {
+  aprobarSolicitud,
+  completarSolicitud,
+  eliminarSolicitud,
+  reabrirSolicitud,
+} from "../actions";
 import { ConfirmButton } from "../usuarios/ConfirmButton";
 
 export const dynamic = "force-dynamic";
@@ -21,16 +26,20 @@ const ESTADO_BADGE: Record<string, string> = {
   pendiente: "bg-amber-500/15 text-amber-600 ring-amber-500/30",
   aprobada: "bg-emerald-500/15 text-emerald-400 ring-emerald-400/50",
   rechazada: "bg-rose-500/15 text-rose-500 ring-rose-500/30",
+  completada: "bg-slate-500/15 text-slate-300 ring-slate-400/30",
 };
 
 export default async function AdminSolicitudesPage() {
   await requireAprobado();
   const solicitudes = await getTodas();
-  // Pendientes primero para revisar.
-  solicitudes.sort(
-    (a, b) =>
-      Number(b.estado === "pendiente") - Number(a.estado === "pendiente"),
-  );
+  // Orden de revisión: pendientes primero, completadas al final.
+  const orden: Record<string, number> = {
+    pendiente: 0,
+    aprobada: 1,
+    rechazada: 2,
+    completada: 3,
+  };
+  solicitudes.sort((a, b) => (orden[a.estado] ?? 9) - (orden[b.estado] ?? 9));
   const pendientes = solicitudes.filter((s) => s.estado === "pendiente").length;
 
   return (
@@ -102,11 +111,27 @@ export default async function AdminSolicitudesPage() {
               </div>
 
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                {s.estado !== "aprobada" && (
+                {(s.estado === "pendiente" || s.estado === "rechazada") && (
                   <form action={aprobarSolicitud}>
                     <input type="hidden" name="id" value={s.id} />
                     <button className="bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700">
                       Aprobar
+                    </button>
+                  </form>
+                )}
+                {s.estado === "aprobada" && (
+                  <form action={completarSolicitud}>
+                    <input type="hidden" name="id" value={s.id} />
+                    <button className="bg-slate-600 px-3 py-1.5 font-medium text-white hover:bg-slate-700">
+                      Marcar completada
+                    </button>
+                  </form>
+                )}
+                {s.estado === "completada" && (
+                  <form action={reabrirSolicitud}>
+                    <input type="hidden" name="id" value={s.id} />
+                    <button className="border border-border px-3 py-1.5 font-medium text-muted hover:bg-surface-2">
+                      Reabrir
                     </button>
                   </form>
                 )}

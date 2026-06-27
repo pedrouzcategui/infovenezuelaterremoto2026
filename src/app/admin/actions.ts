@@ -515,6 +515,28 @@ export async function aprobarSolicitud(formData: FormData): Promise<void> {
   revalidatePath("/solicitudes");
 }
 
+/** Archiva una solicitud ya resuelta (sale de la lista pública). */
+export async function completarSolicitud(formData: FormData): Promise<void> {
+  await requireAprobado();
+  await supabaseAdmin()
+    .from("solicitudes")
+    .update({ estado: "completada" })
+    .eq("id", formData.get("id") as string);
+  revalidatePath("/admin/solicitudes");
+  revalidatePath("/solicitudes");
+}
+
+/** Reabre una solicitud (vuelve a aparecer en la lista pública). */
+export async function reabrirSolicitud(formData: FormData): Promise<void> {
+  await requireAprobado();
+  await supabaseAdmin()
+    .from("solicitudes")
+    .update({ estado: "aprobada" })
+    .eq("id", formData.get("id") as string);
+  revalidatePath("/admin/solicitudes");
+  revalidatePath("/solicitudes");
+}
+
 export async function eliminarSolicitud(formData: FormData): Promise<void> {
   await requireAprobado();
   await supabaseAdmin()
