@@ -156,3 +156,44 @@ export async function clearOtpChallenge(): Promise<void> {
   const store = await cookies();
   store.delete(OTP_COOKIE);
 }
+
+// ---------- OTP del formulario público de solicitudes ----------
+// Igual que el OTP del admin, pero el reto va ligado al correo que el
+// usuario escribe (para que el código solo sirva para ese correo).
+
+const SOL_OTP_COOKIE = "sol_otp";
+
+export async function setSolicitudOtp(email: string, otp: string): Promise<void> {
+  const exp = Date.now() + OTP_TTL_MS;
+  const sig = sign(`${otp}.${email.toLowerCase()}.${exp}`);
+  const store = await cookies();
+  store.set(SOL_OTP_COOKIE, `${exp}.${sig}`, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: OTP_TTL_MS / 1000,
+  });
+}
+
+export async function checkSolicitudOtp(
+  email: string,
+  code: string,
+): Promise<boolean> {
+  const store = await cookies();
+  const v = store.get(SOL_OTP_COOKIE)?.value;
+  if (!v) return false;
+  const idx = v.indexOf(".");
+  if (idx < 0) return false;
+  const exp = Number(v.slice(0, idx));
+  const sig = v.slice(idx + 1);
+  if (!exp || Date.now() > exp) return false;
+  const expected = sign(`${code}.${email.toLowerCase()}.${exp}`);
+  if (expected.length !== sig.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig));
+}
+
+export async function clearSolicitudOtp(): Promise<void> {
+  const store = await cookies();
+  store.delete(SOL_OTP_COOKIE);
+}

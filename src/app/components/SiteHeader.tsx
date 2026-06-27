@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/centros", label: "Centros" },
   { href: "/mapa", label: "Mapa" },
   { href: "/servicios", label: "Servicios" },
+  { href: "/solicitudes", label: "Solicitudes" },
   { href: "/anuncios", label: "Anuncios" },
   { href: "/paises", label: "Países" },
   { href: "/enlaces", label: "Aliados" },

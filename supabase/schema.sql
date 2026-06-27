@@ -347,3 +347,49 @@ drop policy if exists "instituciones bucket: lectura pública" on storage.object
 create policy "instituciones bucket: lectura pública"
   on storage.objects for select
   using (bucket_id = 'instituciones');
+
+-- =============================================================
+-- v15: imágenes en anuncios — logo (si es negocio) + imagen de portada
+-- =============================================================
+alter table public.anuncios add column if not exists logo_url   text;
+alter table public.anuncios add column if not exists imagen_url text;
+
+insert into storage.buckets (id, name, public)
+values ('anuncios', 'anuncios', true)
+on conflict (id) do nothing;
+
+drop policy if exists "anuncios bucket: lectura pública" on storage.objects;
+create policy "anuncios bucket: lectura pública"
+  on storage.objects for select
+  using (bucket_id = 'anuncios');
+
+-- =============================================================
+-- v16: solicitudes públicas (pedidos de ayuda).
+-- Cualquiera las envía (form público con captcha + verificación por
+-- correo); el admin las aprueba antes de publicarlas.
+-- =============================================================
+create table if not exists public.solicitudes (
+  id               uuid primary key default gen_random_uuid(),
+  tipo             text not null,            -- p.ej. 'Donantes de sangre', 'Comida'
+  titulo           text not null,
+  descripcion      text,
+  nombre           text not null,            -- quién hace la solicitud
+  email            text not null,            -- verificado por código (OTP)
+  telefono         text,
+  whatsapp         text,
+  zona             text,
+  ubicacion        text,
+  email_verificado boolean not null default false,
+  estado           text not null default 'pendiente'
+                     check (estado in ('pendiente', 'aprobada', 'rechazada')),
+  created_at       timestamptz not null default now()
+);
+create index if not exists solicitudes_estado_idx on public.solicitudes (estado);
+
+alter table public.solicitudes enable row level security;
+
+-- Lectura pública SOLO de las aprobadas. La inserción la hace el servidor
+-- con service_role (tras captcha + OTP), por eso no hay política de insert.
+drop policy if exists "solicitudes: lectura pública" on public.solicitudes;
+create policy "solicitudes: lectura pública"
+  on public.solicitudes for select using (estado = 'aprobada');

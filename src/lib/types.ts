@@ -3,6 +3,8 @@ export const ZONAS = [
   "Carrizal",
   "San Antonio de los Altos",
   "Caracas",
+  "La Guaira",
+  "El Junquito",
 ] as const;
 
 export type Zona = (typeof ZONAS)[number];
@@ -37,10 +39,29 @@ export type Costo = (typeof COSTOS)[number];
 export const CATEGORIAS_ANUNCIO = ["oficial", "extraoficial", "rumor"] as const;
 export type CategoriaAnuncio = (typeof CATEGORIAS_ANUNCIO)[number];
 
+// Tipos de solicitud / pedido de ayuda (form público).
+export const SOLICITUD_TIPOS = [
+  "Donantes de sangre",
+  "Inspección / Ingeniería",
+  "Rescate",
+  "Comida",
+  "Agua",
+  "Medicinas",
+  "Voluntarios",
+  "Transporte",
+  "Refugio / Albergue",
+  "Ropa",
+  "Apoyo psicológico",
+  "Mascotas",
+  "Otro",
+] as const;
+export type SolicitudTipo = (typeof SOLICITUD_TIPOS)[number];
+
 
 // Insignia / tipo de centro de acopio.
 export const TIPOS_CENTRO = [
   "Gobierno",
+  "Hospital",
   "Negocio",
   "Informal",
   "ONG",
@@ -121,10 +142,28 @@ export interface Anuncio {
   contenido: string;
   categoria: CategoriaAnuncio;
   fuente: string | null;
+  logo_url: string | null;
+  imagen_url: string | null;
   fijado: boolean;
   activo: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface Solicitud {
+  id: string;
+  tipo: string;
+  titulo: string;
+  descripcion: string | null;
+  nombre: string;
+  email: string;
+  telefono: string | null;
+  whatsapp: string | null;
+  zona: string | null;
+  ubicacion: string | null;
+  email_verificado: boolean;
+  estado: "pendiente" | "aprobada" | "rechazada";
+  created_at: string;
 }
 
 export interface Comentario {

@@ -21,6 +21,9 @@ async function getTodos(): Promise<Anuncio[]> {
 const cls =
   "block w-full rounded-none border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200";
 
+const fileCls =
+  "block w-full text-sm text-muted file:mr-3 file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-strong hover:file:text-white";
+
 export default async function AdminAnunciosPage() {
   await requireAprobado();
   const anuncios = await getTodos();
@@ -73,6 +76,28 @@ export default async function AdminAnunciosPage() {
                         ))}
                       </select>
                       <input name="fuente" defaultValue={a.fuente ?? ""} placeholder="Fuente / link" className={cls} />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <label className="block">
+                        <span className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wide text-faint">
+                          Logo del negocio
+                          {a.logo_url && (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={a.logo_url} alt="" className="h-6 w-6 bg-white object-contain" />
+                          )}
+                        </span>
+                        <input type="file" name="logo" accept="image/*" className={fileCls} />
+                      </label>
+                      <label className="block">
+                        <span className="mb-1 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wide text-faint">
+                          Imagen de portada
+                          {a.imagen_url && (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={a.imagen_url} alt="" className="h-6 w-10 object-cover" />
+                          )}
+                        </span>
+                        <input type="file" name="imagen" accept="image/*" className={fileCls} />
+                      </label>
                     </div>
                     <div className="flex gap-4">
                       <label className="flex items-center gap-2 text-sm text-muted">

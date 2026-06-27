@@ -3,11 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 import type { Servicio } from "@/lib/types";
 import { CATEGORIAS_SERVICIO, COSTOS, ZONAS } from "@/lib/types";
 import { AdminNav } from "../AdminNav";
-import {
-  actualizarServicio,
-  eliminarServicio,
-  limpiarReportesServicio,
-} from "../actions";
+import { actualizarServicio, eliminarServicio } from "../actions";
 import { ServicioForm } from "./ServicioForm";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +12,6 @@ async function getTodos(): Promise<Servicio[]> {
   const { data } = await supabaseAdmin()
     .from("servicios")
     .select("*")
-    .order("reportes", { ascending: false })
     .order("categoria", { ascending: true });
   return (data ?? []) as Servicio[];
 }
@@ -52,11 +47,6 @@ export default async function AdminServiciosPage() {
                       {!s.activo && (
                         <span className="rounded-none bg-surface-2 px-1.5 py-0.5 text-xs text-muted">
                           oculto
-                        </span>
-                      )}
-                      {s.reportes > 0 && (
-                        <span className="ml-1 rounded-none bg-rose-100 px-1.5 py-0.5 text-xs text-rose-700">
-                          ⚠ {s.reportes} reportes
                         </span>
                       )}
                       <span className="ml-2 text-xs text-faint">{s.categoria}</span>
@@ -131,14 +121,6 @@ export default async function AdminServiciosPage() {
                   </form>
 
                   <div className="flex gap-4 border-t border-border px-4 py-2">
-                    {s.reportes > 0 && (
-                      <form action={limpiarReportesServicio}>
-                        <input type="hidden" name="id" value={s.id} />
-                        <button type="submit" className="text-xs font-medium text-faint hover:underline">
-                          Limpiar reportes
-                        </button>
-                      </form>
-                    )}
                     <form action={eliminarServicio}>
                       <input type="hidden" name="id" value={s.id} />
                       <button type="submit" className="text-xs font-medium text-red-600 hover:underline">

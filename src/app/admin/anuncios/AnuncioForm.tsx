@@ -54,6 +54,22 @@ export function AnuncioForm() {
         </select>
         <input name="fuente" placeholder="Fuente / link (opcional)" className={cls} />
       </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 block font-mono text-[11px] uppercase tracking-wide text-faint">
+            Logo del negocio (opcional)
+          </span>
+          <input type="file" name="logo" accept="image/*" className={fileCls} />
+        </label>
+        <label className="block">
+          <span className="mb-1 block font-mono text-[11px] uppercase tracking-wide text-faint">
+            Imagen de portada (opcional)
+          </span>
+          <input type="file" name="imagen" accept="image/*" className={fileCls} />
+        </label>
+      </div>
+
       <label className="flex items-center gap-2 text-sm text-muted">
         <input type="checkbox" name="fijado" /> Fijar arriba 📌
       </label>
@@ -71,3 +87,6 @@ export function AnuncioForm() {
 
 const cls =
   "block w-full rounded-none border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200";
+
+const fileCls =
+  "block w-full text-sm text-muted file:mr-3 file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-strong hover:file:text-white";

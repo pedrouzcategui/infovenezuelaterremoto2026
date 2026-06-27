@@ -293,15 +293,6 @@ export async function actualizarServicio(formData: FormData): Promise<void> {
   revalidatePath("/servicios");
 }
 
-export async function limpiarReportesServicio(formData: FormData): Promise<void> {
-  await requireAprobado();
-  await supabaseAdmin()
-    .from("servicios")
-    .update({ reportes: 0 })
-    .eq("id", formData.get("id") as string);
-  revalidatePath("/admin/servicios");
-}
-
 export async function eliminarServicio(formData: FormData): Promise<void> {
   await requireAprobado();
   await supabaseAdmin().from("servicios").delete().eq("id", formData.get("id") as string);
@@ -323,11 +314,15 @@ export async function crearAnuncio(
   if (!CATEGORIAS_ANUNCIO.includes(categoria))
     return { error: "Selecciona una categoría." };
 
+  const logo_url = await uploadImagen(formData, "logo", "anuncios");
+  const imagen_url = await uploadImagen(formData, "imagen", "anuncios");
   const { error } = await supabaseAdmin().from("anuncios").insert({
     titulo,
     contenido,
     categoria,
     fuente: str(formData, "fuente"),
+    ...(logo_url ? { logo_url } : {}),
+    ...(imagen_url ? { imagen_url } : {}),
     fijado: bool(formData, "fijado"),
     activo: true,
   });
@@ -340,6 +335,8 @@ export async function crearAnuncio(
 export async function actualizarAnuncio(formData: FormData): Promise<void> {
   await requireAprobado();
   const categoria = (str(formData, "categoria") ?? "") as CategoriaAnuncio;
+  const logo_url = await uploadImagen(formData, "logo", "anuncios");
+  const imagen_url = await uploadImagen(formData, "imagen", "anuncios");
   await supabaseAdmin()
     .from("anuncios")
     .update({
@@ -347,6 +344,8 @@ export async function actualizarAnuncio(formData: FormData): Promise<void> {
       contenido: str(formData, "contenido"),
       ...(CATEGORIAS_ANUNCIO.includes(categoria) ? { categoria } : {}),
       fuente: str(formData, "fuente"),
+      ...(logo_url ? { logo_url } : {}),
+      ...(imagen_url ? { imagen_url } : {}),
       fijado: bool(formData, "fijado"),
       activo: bool(formData, "activo"),
       updated_at: new Date().toISOString(),
@@ -502,6 +501,28 @@ export async function cambiarRol(formData: FormData): Promise<void> {
     .update({ role: rol })
     .eq("id", formData.get("id") as string);
   revalidatePath("/admin/usuarios");
+}
+
+// ---------- Solicitudes públicas ----------
+
+export async function aprobarSolicitud(formData: FormData): Promise<void> {
+  await requireAprobado();
+  await supabaseAdmin()
+    .from("solicitudes")
+    .update({ estado: "aprobada" })
+    .eq("id", formData.get("id") as string);
+  revalidatePath("/admin/solicitudes");
+  revalidatePath("/solicitudes");
+}
+
+export async function eliminarSolicitud(formData: FormData): Promise<void> {
+  await requireAprobado();
+  await supabaseAdmin()
+    .from("solicitudes")
+    .delete()
+    .eq("id", formData.get("id") as string);
+  revalidatePath("/admin/solicitudes");
+  revalidatePath("/solicitudes");
 }
 
 // ---------- Comentarios (moderación) ----------

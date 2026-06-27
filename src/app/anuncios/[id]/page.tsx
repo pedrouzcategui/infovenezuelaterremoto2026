@@ -15,7 +15,13 @@ export async function generateMetadata({
   const { id } = await params;
   const a = await getAnuncio(id);
   if (!a) return { title: "Anuncio no encontrado" };
-  return { title: a.titulo, description: a.contenido.slice(0, 160) };
+  const images = a.imagen_url ? [a.imagen_url] : undefined;
+  return {
+    title: a.titulo,
+    description: a.contenido.slice(0, 160),
+    openGraph: { title: a.titulo, description: a.contenido.slice(0, 160), images },
+    twitter: { card: "summary_large_image", title: a.titulo, images },
+  };
 }
 
 export default async function AnuncioDetallePage({
@@ -45,14 +51,34 @@ export default async function AnuncioDetallePage({
         >
           {meta.emoji} {meta.label}
         </span>
-        <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl">
-          {a.fijado && "📌 "}
-          {a.titulo}
-        </h1>
+        <div className="mt-4 flex items-start gap-4">
+          {a.logo_url && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={a.logo_url}
+              alt=""
+              className="h-14 w-14 shrink-0 bg-white object-contain p-1"
+            />
+          )}
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl">
+            {a.fijado && "📌 "}
+            {a.titulo}
+          </h1>
+        </div>
         <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-faint">
           Publicado el {formatFecha(a.created_at)}
         </p>
       </header>
+
+      {/* Imagen de portada */}
+      {a.imagen_url && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={a.imagen_url}
+          alt={a.titulo}
+          className="mt-6 w-full object-cover"
+        />
+      )}
 
       {/* Cuerpo estilo blog */}
       <div className="mt-6 space-y-4 whitespace-pre-line text-lg leading-relaxed text-muted">

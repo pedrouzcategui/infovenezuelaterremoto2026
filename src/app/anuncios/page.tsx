@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getAnuncios } from "@/lib/data";
 import { CATEGORIAS_ANUNCIO } from "@/lib/types";
 import { ANUNCIO_META } from "@/lib/labels";
-import { formatFecha } from "@/lib/format";
+import { AnunciosResultados } from "./AnunciosResultados";
 
 export const dynamic = "force-dynamic";
 
@@ -43,44 +43,7 @@ export default async function AnunciosPage({
         ))}
       </div>
 
-      {filtrados.length === 0 ? (
-        <p className="rounded-none border border-dashed border-border bg-surface p-6 text-center text-faint">
-          No hay anuncios{cat ? " en esta categoría" : ""} por ahora.
-        </p>
-      ) : (
-        <ul className="grid gap-4">
-          {filtrados.map((a) => {
-            const meta = ANUNCIO_META[a.categoria];
-            return (
-              <li key={a.id}>
-                <Link
-                  href={`/anuncios/${a.id}`}
-                  className={`block p-4 transition-colors hover:brightness-110 ${meta.card}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-bold uppercase tracking-tight text-foreground">
-                      {a.fijado && "📌 "}
-                      {a.titulo}
-                    </h3>
-                    <span
-                      className={`shrink-0 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide ring-1 ${meta.badge}`}
-                    >
-                      {meta.emoji} {meta.label}
-                    </span>
-                  </div>
-                  <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-muted">
-                    {a.contenido}
-                  </p>
-                  <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-wide text-faint">
-                    <span>{formatFecha(a.created_at)}</span>
-                    <span className="text-emerald-500">Leer más →</span>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <AnunciosResultados anuncios={filtrados} cat={cat} />
 
       <p className="text-center text-xs text-faint">
         Los rumores no están verificados. Confirma antes de compartir.{" "}

@@ -14,6 +14,10 @@ const FAQ = [
     a: "Dirígete a la sección de Donaciones, donde podrás ver las instituciones en las que confiamos para recibir dinero.",
   },
   {
+    q: "¿Cómo puedo enviar una solicitud?",
+    a: "Entra a la sección Solicitudes y pulsa “Publicar solicitud”. Llena el formulario (qué necesitas y cómo contactarte), verifica tu correo con el código que te enviamos y listo. Un administrador la revisará antes de publicarla.",
+  },
+  {
     q: "¿Con quién me puedo contactar para información de la página?",
     a: "Por favor contáctate con @piotruzc en Instagram para cambios o feedback en la página web. Debido al alto volumen de mensajes, tardaré un poco en contestar.",
   },

@@ -6,6 +6,7 @@ type Tab =
   | "donaciones"
   | "centros"
   | "servicios"
+  | "solicitudes"
   | "anuncios"
   | "paises"
   | "comentarios"
@@ -15,6 +16,7 @@ const TABS: { key: Tab; label: string; href: string }[] = [
   { key: "donaciones", label: "Instituciones", href: "/admin" },
   { key: "centros", label: "Centros", href: "/admin/centros" },
   { key: "servicios", label: "Servicios", href: "/admin/servicios" },
+  { key: "solicitudes", label: "Solicitudes", href: "/admin/solicitudes" },
   { key: "anuncios", label: "Anuncios", href: "/admin/anuncios" },
   { key: "paises", label: "Países", href: "/admin/paises" },
   { key: "comentarios", label: "Comentarios", href: "/admin/comentarios" },

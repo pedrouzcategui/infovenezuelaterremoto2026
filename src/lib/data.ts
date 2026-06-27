@@ -8,6 +8,7 @@ import type {
   Institucion,
   PaisAyuda,
   Servicio,
+  Solicitud,
 } from "./types";
 import type { PuntoMapa } from "@/app/mapa/MapaView";
 
@@ -92,6 +93,17 @@ export async function getInstituciones(): Promise<Institucion[]> {
     .order("created_at", { ascending: false });
   if (error) return []; // resiliente: la tabla puede no existir aún
   return (data ?? []) as Institucion[];
+}
+
+/** Solicitudes aprobadas, más recientes primero (lectura pública). */
+export async function getSolicitudesAprobadas(): Promise<Solicitud[]> {
+  const { data, error } = await supabasePublic()
+    .from("solicitudes")
+    .select("*")
+    .eq("estado", "aprobada")
+    .order("created_at", { ascending: false });
+  if (error) return []; // resiliente: la tabla puede no existir aún
+  return (data ?? []) as Solicitud[];
 }
 
 /** Países / instituciones que han ayudado (lectura pública). */
