@@ -2,6 +2,8 @@ export const ZONAS = [
   "Los Teques",
   "Carrizal",
   "San Antonio de los Altos",
+  "San Pedro de los Altos",
+  "San Diego de los Altos",
   "Caracas",
   "La Guaira",
   "El Junquito",
