@@ -182,6 +182,7 @@ function centroFields(fd: FormData) {
     dias: str(fd, "dias"),
     hora_inicio: str(fd, "hora_inicio"),
     hora_fin: str(fd, "hora_fin"),
+    fijado: bool(fd, "fijado"),
   };
 }
 

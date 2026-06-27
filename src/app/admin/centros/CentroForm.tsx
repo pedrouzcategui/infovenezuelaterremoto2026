@@ -102,6 +102,9 @@ export function CentroForm() {
       />
 
       <label className="flex items-center gap-2 text-sm text-muted">
+        <input type="checkbox" name="fijado" /> 📌 Fijar arriba (aparece primero)
+      </label>
+      <label className="flex items-center gap-2 text-sm text-muted">
         <input type="checkbox" name="patrocinado" /> ⭐ Patrocinado (destacar marca
         grande)
       </label>

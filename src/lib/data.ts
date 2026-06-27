@@ -31,6 +31,8 @@ export async function getCentros(): Promise<Centro[]> {
   };
   const rank = (c: Centro) => RANK[c.confianza ?? ""] ?? 3;
   return rows.sort((a, b) => {
+    // Fijados primero, luego por nivel de verificación, luego patrocinados.
+    if (!!a.fijado !== !!b.fijado) return Number(!!b.fijado) - Number(!!a.fijado);
     const r = rank(a) - rank(b);
     if (r !== 0) return r;
     return Number(!!b.patrocinado) - Number(!!a.patrocinado);

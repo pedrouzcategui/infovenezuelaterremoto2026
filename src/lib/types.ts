@@ -102,6 +102,7 @@ export interface Centro {
   dias: string | null;
   hora_inicio: string | null;
   hora_fin: string | null;
+  fijado: boolean;
   activo: boolean;
   created_at: string;
 }

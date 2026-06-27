@@ -142,6 +142,9 @@ export default async function AdminCentrosPage() {
                       </div>
                     </div>
                     <label className="flex items-center gap-2 text-sm text-muted">
+                      <input type="checkbox" name="fijado" defaultChecked={c.fijado} /> 📌 Fijar arriba
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-muted">
                       <input type="checkbox" name="patrocinado" defaultChecked={c.patrocinado} /> ⭐ Patrocinado
                     </label>
                     <div className="grid items-center gap-3 sm:grid-cols-2">

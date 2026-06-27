@@ -412,3 +412,6 @@ alter table public.servicios add column if not exists contribuido_por text;
 alter table public.centros add column if not exists dias        text;
 alter table public.centros add column if not exists hora_inicio text;
 alter table public.centros add column if not exists hora_fin    text;
+
+-- v21: fijar centros importantes para que aparezcan primero.
+alter table public.centros add column if not exists fijado boolean not null default false;
