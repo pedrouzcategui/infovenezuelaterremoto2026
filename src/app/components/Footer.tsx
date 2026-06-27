@@ -79,7 +79,16 @@ export function Footer() {
               </a>
             </p>
             <p className="mt-1">
-              Contribución de información y administración: Mercedes Pineda,{" "}
+              Contribución de información y administración:{" "}
+              <a
+                href="https://github.com/Mercedesfpl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted"
+              >
+                Mercedes Pineda
+              </a>
+              ,{" "}
               <a
                 href="https://github.com/jesus24-dev"
                 target="_blank"
