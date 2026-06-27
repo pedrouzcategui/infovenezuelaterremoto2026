@@ -54,7 +54,7 @@ export function HomeCentros({ centros }: { centros: Centro[] }) {
               <h3 className="mb-3 text-xl font-bold uppercase tracking-tight text-foreground">
                 {zona}
               </h3>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {delZona.map((c) => (
                   <CentroCard key={c.id} centro={c} />
                 ))}
