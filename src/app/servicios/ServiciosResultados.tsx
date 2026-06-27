@@ -55,13 +55,17 @@ export function ServiciosResultados({
             const meta = servicioMeta(s.categoria);
             return (
               <li key={s.id} className="overflow-hidden border border-border bg-surface">
-                {s.foto_url && (
+                {s.foto_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={s.foto_url}
                     alt={s.nombre}
                     className="aspect-[16/9] w-full object-cover"
                   />
+                ) : (
+                  <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-surface-2 to-surface text-4xl opacity-40">
+                    {meta.emoji}
+                  </div>
                 )}
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-3">
