@@ -109,6 +109,10 @@ export function Footer() {
             </p>
             <p className="mt-1">
               Hecho con cariño para Venezuela y el mundo 💚 ·{" "}
+              <Link href="/docs" className="underline hover:text-muted">
+                API / Datos abiertos
+              </Link>{" "}
+              ·{" "}
               <Link href="/admin" className="underline hover:text-muted">
                 Administración
               </Link>
