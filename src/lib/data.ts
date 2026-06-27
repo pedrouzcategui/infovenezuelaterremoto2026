@@ -22,8 +22,19 @@ export async function getCentros(): Promise<Centro[]> {
     .order("nombre", { ascending: true });
   if (error) throw error;
   const rows = (data ?? []) as Centro[];
-  // Patrocinados primero (orden estable; resiliente si la columna aún no existe).
-  return rows.sort((a, b) => Number(!!b.patrocinado) - Number(!!a.patrocinado));
+  // Orden: verificados primero, confiables, luego por verificar / sin nivel.
+  // Dentro de cada nivel, los patrocinados van primero.
+  const RANK: Record<string, number> = {
+    Verificado: 0,
+    Confiable: 1,
+    "Por verificar": 2,
+  };
+  const rank = (c: Centro) => RANK[c.confianza ?? ""] ?? 3;
+  return rows.sort((a, b) => {
+    const r = rank(a) - rank(b);
+    if (r !== 0) return r;
+    return Number(!!b.patrocinado) - Number(!!a.patrocinado);
+  });
 }
 
 /** Un centro por id (lectura pública). */
