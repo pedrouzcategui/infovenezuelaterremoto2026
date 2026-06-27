@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireAprobado } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import type { Anuncio } from "@/lib/types";
 import { CATEGORIAS_ANUNCIO } from "@/lib/types";
@@ -22,7 +22,7 @@ const cls =
   "block w-full rounded-none border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200";
 
 export default async function AdminAnunciosPage() {
-  await requireAdmin();
+  await requireAprobado();
   const anuncios = await getTodos();
 
   return (

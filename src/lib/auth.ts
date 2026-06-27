@@ -70,20 +70,33 @@ export async function isAdmin(): Promise<boolean> {
   return profile?.role === "admin" && profile.estado === "aprobado";
 }
 
-export async function requireAdmin(): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
+/** Envía a un usuario sin permiso al lugar correcto según su estado. */
+async function redirectByEstado(): Promise<never> {
+  const profile = await getCurrentProfile();
+  if (!profile) redirect("/admin/login"); // sin sesión
+  if (profile.estado === "aprobado") redirect("/admin"); // aprobado pero sin permiso suficiente
+  redirect("/pendiente"); // pendiente o rechazado
 }
 
-/** Colaborador aprobado (o admin). Para el área de contribución. */
-export async function requireColaborador(): Promise<Profile> {
+/** Solo administradores (rol admin aprobado o contraseña de respaldo). */
+export async function requireAdmin(): Promise<void> {
+  if (await isAdmin()) return;
+  await redirectByEstado();
+}
+
+/** Admin o colaborador APROBADO. Para el panel de gestión de contenido. */
+export async function requireAprobado(): Promise<Profile> {
   if (await hasPasswordSession()) {
-    // El admin por contraseña puede entrar como si fuera aprobado.
     return { id: "", email: null, nombre: "Admin", role: "admin", estado: "aprobado", created_at: "" };
   }
   const profile = await getCurrentProfile();
-  if (!profile || profile.estado !== "aprobado") redirect("/admin/login");
-  return profile;
+  if (profile && profile.estado === "aprobado") return profile;
+  await redirectByEstado();
+  throw new Error("unreachable");
 }
+
+/** Alias histórico. */
+export const requireColaborador = requireAprobado;
 
 export async function startAdminSession(): Promise<void> {
   const store = await cookies();

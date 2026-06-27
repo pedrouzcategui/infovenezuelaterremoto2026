@@ -11,6 +11,7 @@ import {
   generateOtp,
   passwordOk,
   requireAdmin,
+  requireAprobado,
   setOtpChallenge,
   startAdminSession,
 } from "@/lib/auth";
@@ -136,7 +137,7 @@ async function uploadImagen(
 // ---------- Donaciones ----------
 
 export async function aprobarDonacion(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("donaciones")
     .update({ estado: "aprobada", reviewed_at: new Date().toISOString() })
@@ -146,7 +147,7 @@ export async function aprobarDonacion(formData: FormData): Promise<void> {
 }
 
 export async function rechazarDonacion(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("donaciones")
     .update({ estado: "rechazada", reviewed_at: new Date().toISOString() })
@@ -184,7 +185,7 @@ export async function crearCentro(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAdmin();
+  await requireAprobado();
   const f = centroFields(formData);
   const zona = (str(formData, "zona") ?? "") as Zona;
   if (!f.nombre) return { error: "El nombre es obligatorio." };
@@ -208,7 +209,7 @@ export async function crearCentro(
 }
 
 export async function actualizarCentro(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const id = formData.get("id") as string;
   const zona = (str(formData, "zona") ?? "") as Zona;
   const foto_url = await uploadImagen(formData, "foto", "centros");
@@ -229,7 +230,7 @@ export async function actualizarCentro(formData: FormData): Promise<void> {
 }
 
 export async function eliminarCentro(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin().from("centros").delete().eq("id", formData.get("id") as string);
   revalidatePath("/admin/centros");
   revalidatePath("/");
@@ -257,7 +258,7 @@ export async function crearServicio(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAdmin();
+  await requireAprobado();
   const f = servicioFields(formData);
   const categoria = (str(formData, "categoria") ?? "") as CategoriaServicio;
   if (!f.nombre) return { error: "El nombre es obligatorio." };
@@ -275,7 +276,7 @@ export async function crearServicio(
 }
 
 export async function actualizarServicio(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const id = formData.get("id") as string;
   const categoria = (str(formData, "categoria") ?? "") as CategoriaServicio;
   const foto_url = await uploadImagen(formData, "foto", "servicios");
@@ -293,7 +294,7 @@ export async function actualizarServicio(formData: FormData): Promise<void> {
 }
 
 export async function limpiarReportesServicio(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("servicios")
     .update({ reportes: 0 })
@@ -302,7 +303,7 @@ export async function limpiarReportesServicio(formData: FormData): Promise<void>
 }
 
 export async function eliminarServicio(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin().from("servicios").delete().eq("id", formData.get("id") as string);
   revalidatePath("/admin/servicios");
   revalidatePath("/servicios");
@@ -314,7 +315,7 @@ export async function crearAnuncio(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAdmin();
+  await requireAprobado();
   const titulo = str(formData, "titulo");
   const contenido = str(formData, "contenido");
   const categoria = (str(formData, "categoria") ?? "") as CategoriaAnuncio;
@@ -337,7 +338,7 @@ export async function crearAnuncio(
 }
 
 export async function actualizarAnuncio(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const categoria = (str(formData, "categoria") ?? "") as CategoriaAnuncio;
   await supabaseAdmin()
     .from("anuncios")
@@ -356,7 +357,7 @@ export async function actualizarAnuncio(formData: FormData): Promise<void> {
 }
 
 export async function eliminarAnuncio(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin().from("anuncios").delete().eq("id", formData.get("id") as string);
   revalidatePath("/admin/anuncios");
   revalidatePath("/anuncios");
@@ -368,7 +369,7 @@ export async function crearInstitucion(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAdmin();
+  await requireAprobado();
   const nombre = str(formData, "nombre");
   if (!nombre) return { error: "El nombre es obligatorio." };
   const logo = await uploadImagen(formData, "logo", "instituciones");
@@ -388,7 +389,7 @@ export async function crearInstitucion(
 }
 
 export async function actualizarInstitucion(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const logo = await uploadImagen(formData, "logo", "instituciones");
   await supabaseAdmin()
     .from("instituciones")
@@ -407,7 +408,7 @@ export async function actualizarInstitucion(formData: FormData): Promise<void> {
 }
 
 export async function eliminarInstitucion(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("instituciones")
     .delete()
@@ -422,7 +423,7 @@ export async function crearPais(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAdmin();
+  await requireAprobado();
   const pais = str(formData, "pais");
   const descripcion = str(formData, "descripcion");
   if (!pais || !descripcion)
@@ -444,7 +445,7 @@ export async function crearPais(
 }
 
 export async function actualizarPais(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("paises_ayuda")
     .update({
@@ -462,7 +463,7 @@ export async function actualizarPais(formData: FormData): Promise<void> {
 }
 
 export async function eliminarPais(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   await supabaseAdmin()
     .from("paises_ayuda")
     .delete()
@@ -504,7 +505,7 @@ export async function cambiarRol(formData: FormData): Promise<void> {
 // ---------- Comentarios (moderación) ----------
 
 export async function ocultarComentario(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const id = formData.get("id") as string;
   const oculto = bool(formData, "oculto");
   await supabaseAdmin().from("comentarios").update({ oculto: !oculto }).eq("id", id);
@@ -514,7 +515,7 @@ export async function ocultarComentario(formData: FormData): Promise<void> {
 }
 
 export async function eliminarComentario(formData: FormData): Promise<void> {
-  await requireAdmin();
+  await requireAprobado();
   const id = formData.get("id") as string;
   await supabaseAdmin().from("comentarios").delete().eq("id", id);
   revalidatePath("/admin/comentarios");

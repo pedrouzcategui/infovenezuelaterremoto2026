@@ -27,7 +27,27 @@ export async function GET(request: Request) {
       },
     });
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) {
+      // Decide el destino según el rol/estado del perfil.
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      let dest = "/pendiente";
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role,estado")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (
+          profile &&
+          (profile.role === "admin" || profile.estado === "aprobado")
+        ) {
+          dest = next;
+        }
+      }
+      return NextResponse.redirect(`${origin}${dest}`);
+    }
   }
 
   return NextResponse.redirect(`${origin}/admin/login?error=oauth`);

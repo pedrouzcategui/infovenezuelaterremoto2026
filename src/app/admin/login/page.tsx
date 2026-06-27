@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/auth";
+import { getCurrentProfile, isAdmin } from "@/lib/auth";
 import { LoginForm } from "./LoginForm";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 
@@ -7,6 +7,9 @@ export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
   if (await isAdmin()) redirect("/admin");
+  // Ya autenticado vía Google: enviarlo según su estado.
+  const profile = await getCurrentProfile();
+  if (profile) redirect(profile.estado === "aprobado" ? "/admin" : "/pendiente");
 
   return (
     <div className="mx-auto max-w-sm pt-6">

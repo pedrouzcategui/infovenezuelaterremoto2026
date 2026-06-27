@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireAprobado } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import type { Comentario } from "@/lib/types";
 import { formatFecha } from "@/lib/format";
@@ -19,7 +19,7 @@ async function getComentarios(): Promise<ComentarioAdmin[]> {
 }
 
 export default async function AdminComentariosPage() {
-  await requireAdmin();
+  await requireAprobado();
   const comentarios = await getComentarios();
   const reportados = comentarios.filter((c) => c.reportes > 0).length;
 

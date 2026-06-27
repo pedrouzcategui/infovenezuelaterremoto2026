@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isAdmin } from "@/lib/auth";
 import { logoutAction } from "./actions";
 
 type Tab =
@@ -20,11 +21,14 @@ const TABS: { key: Tab; label: string; href: string }[] = [
   { key: "usuarios", label: "Usuarios", href: "/admin/usuarios" },
 ];
 
-export function AdminNav({ active }: { active: Tab }) {
+export async function AdminNav({ active }: { active: Tab }) {
+  const esAdmin = await isAdmin();
+  // Solo los administradores gestionan usuarios.
+  const tabs = esAdmin ? TABS : TABS.filter((t) => t.key !== "usuarios");
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
       <nav className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
+        {tabs.map((t) => (
           <Link
             key={t.key}
             href={t.href}
