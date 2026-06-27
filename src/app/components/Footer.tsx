@@ -67,10 +67,28 @@ export function Footer() {
         {/* Créditos + meta */}
         <div className="flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:flex-row sm:items-center">
           <div className="font-mono text-[11px] uppercase tracking-wider text-faint">
-            <p>Créditos · Desarrollo web: Pedro Uzcátegui</p>
+            <p>
+              Créditos · Desarrollo web:{" "}
+              <a
+                href="https://github.com/pedrouzcategui"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted"
+              >
+                Pedro Uzcátegui
+              </a>
+            </p>
             <p className="mt-1">
               Contribución de información y administración: Mercedes Pineda,
-              Jesús Sirit, Albany Torres
+              Jesús Sirit,{" "}
+              <a
+                href="https://github.com/lospollitosdicen"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted"
+              >
+                Albany Torres
+              </a>
             </p>
             <p className="mt-1">
               Hecho con cariño para Venezuela y el mundo 💚 ·{" "}
