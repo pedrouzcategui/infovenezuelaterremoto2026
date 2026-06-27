@@ -64,6 +64,12 @@ export function ProponerCentroForm() {
 
       <input name="direccion" placeholder="Dirección" className={cls} />
 
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+        <input name="dias" placeholder="Días (ej: Lun a Vie) — opcional" className={cls} />
+        <input name="hora_inicio" type="time" aria-label="Hora de apertura" className={cls} />
+        <input name="hora_fin" type="time" aria-label="Hora de cierre" className={cls} />
+      </div>
+
       <textarea
         name="necesidades_detalle"
         rows={3}

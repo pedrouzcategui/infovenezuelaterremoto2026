@@ -14,6 +14,17 @@ export function instagramLink(handle: string | null | undefined): string | null 
   return clean ? `https://instagram.com/${clean}` : null;
 }
 
+/** Texto de horario a partir de días y horas (cualquiera opcional). */
+export function formatHorario(
+  dias: string | null | undefined,
+  inicio: string | null | undefined,
+  fin: string | null | undefined,
+): string | null {
+  const horas = inicio && fin ? `${inicio}–${fin}` : inicio || fin || "";
+  const partes = [dias?.trim(), horas].filter(Boolean);
+  return partes.length ? partes.join(" · ") : null;
+}
+
 export function formatFecha(iso: string): string {
   return new Date(iso).toLocaleDateString("es-VE", {
     day: "numeric",

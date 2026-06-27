@@ -87,6 +87,11 @@ export default async function AdminCentrosPage() {
                       </select>
                     </div>
                     <input name="direccion" defaultValue={c.direccion ?? ""} placeholder="Dirección" className={cls} />
+                    <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+                      <input name="dias" defaultValue={c.dias ?? ""} placeholder="Días (ej: Lun a Vie)" className={cls} />
+                      <input name="hora_inicio" type="time" defaultValue={c.hora_inicio ?? ""} aria-label="Hora de apertura" className={cls} />
+                      <input name="hora_fin" type="time" defaultValue={c.hora_fin ?? ""} aria-label="Hora de cierre" className={cls} />
+                    </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <select name="tipo" defaultValue={c.tipo ?? ""} className={cls}>
                         <option value="">Sin insignia</option>

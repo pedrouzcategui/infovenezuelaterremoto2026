@@ -407,3 +407,8 @@ alter table public.solicitudes alter column email drop not null;
 -- v19: quién contribuyó el centro / servicio (nombre del colaborador o admin).
 alter table public.centros   add column if not exists contribuido_por text;
 alter table public.servicios add column if not exists contribuido_por text;
+
+-- v20: horario opcional del centro de acopio (días y horas de atención).
+alter table public.centros add column if not exists dias        text;
+alter table public.centros add column if not exists hora_inicio text;
+alter table public.centros add column if not exists hora_fin    text;

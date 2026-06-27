@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCentro, getComentarios } from "@/lib/data";
-import { formatFecha, instagramLink, whatsappLink } from "@/lib/format";
+import { formatFecha, formatHorario, instagramLink, whatsappLink } from "@/lib/format";
 import { ComentariosForm } from "./ComentariosForm";
 import { CentroBadges } from "@/app/components/CentroBadges";
 import { CentroQR } from "@/app/components/CentroQR";
@@ -95,6 +95,11 @@ export default async function CentroDetallePage({
               {centro.zona}
               {centro.direccion ? ` · 📍 ${centro.direccion}` : ""}
             </p>
+            {formatHorario(centro.dias, centro.hora_inicio, centro.hora_fin) && (
+              <p className="mt-1 text-sm text-emerald-500">
+                🕒 {formatHorario(centro.dias, centro.hora_inicio, centro.hora_fin)}
+              </p>
+            )}
             {centro.contribuido_por && (
               <p className="mt-1 font-mono text-[11px] uppercase tracking-wide text-faint">
                 Contribuido por {centro.contribuido_por}

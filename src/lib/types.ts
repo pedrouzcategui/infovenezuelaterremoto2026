@@ -99,6 +99,9 @@ export interface Centro {
   patrocinador_nombre: string | null;
   patrocinador_logo: string | null;
   contribuido_por: string | null;
+  dias: string | null;
+  hora_inicio: string | null;
+  hora_fin: string | null;
   activo: boolean;
   created_at: string;
 }

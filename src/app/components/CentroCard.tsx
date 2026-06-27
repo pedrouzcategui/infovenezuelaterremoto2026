@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Centro } from "@/lib/types";
-import { instagramLink, whatsappLink } from "@/lib/format";
+import { formatHorario, instagramLink, whatsappLink } from "@/lib/format";
 import { centroTipoMeta, confianzaMeta } from "@/lib/labels";
 
 function IconInstagram() {
@@ -99,6 +99,11 @@ export function CentroCard({ centro }: { centro: Centro }) {
           {centro.zona}
           {centro.direccion ? ` · ${centro.direccion}` : ""}
         </p>
+        {formatHorario(centro.dias, centro.hora_inicio, centro.hora_fin) && (
+          <p className="mt-1 text-xs text-emerald-500/90">
+            🕒 {formatHorario(centro.dias, centro.hora_inicio, centro.hora_fin)}
+          </p>
+        )}
 
         {necesidades.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">

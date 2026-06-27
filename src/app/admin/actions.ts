@@ -179,6 +179,9 @@ function centroFields(fd: FormData) {
     confianza: NIVELES_CONFIANZA.includes(confianza as never) ? confianza : null,
     patrocinado: bool(fd, "patrocinado"),
     patrocinador_nombre: str(fd, "patrocinador_nombre"),
+    dias: str(fd, "dias"),
+    hora_inicio: str(fd, "hora_inicio"),
+    hora_fin: str(fd, "hora_fin"),
   };
 }
 
