@@ -79,8 +79,16 @@ export function Footer() {
               </a>
             </p>
             <p className="mt-1">
-              Contribución de información y administración: Mercedes Pineda,
-              Jesús Sirit,{" "}
+              Contribución de información y administración: Mercedes Pineda,{" "}
+              <a
+                href="https://github.com/jesus24-dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-muted"
+              >
+                Jesús Sirit
+              </a>
+              ,{" "}
               <a
                 href="https://github.com/lospollitosdicen"
                 target="_blank"
