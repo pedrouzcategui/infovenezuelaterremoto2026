@@ -165,7 +165,7 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
         setEstado("idle");
       },
       () => setEstado("error"),
-      { enableHighAccuracy: true, timeout: 10000 },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
     );
   }
 
@@ -319,8 +319,10 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
       </div>
 
       {estado === "error" && (
-        <div className="absolute bottom-3 left-1/2 z-[1000] -translate-x-1/2 border border-rose-500/60 bg-[#070a0f]/90 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-rose-400 shadow-lg">
-          No pudimos obtener tu ubicación. Activa el permiso.
+        <div className="absolute bottom-3 left-1/2 z-[1000] w-[92%] max-w-md -translate-x-1/2 border border-rose-500/60 bg-[#070a0f]/95 px-3 py-2 text-center font-mono text-[11px] uppercase leading-relaxed tracking-wide text-rose-400 shadow-lg">
+          No pudimos obtener tu ubicación. Activa el permiso de ubicación. Si
+          abriste el sitio desde WhatsApp/Instagram, ábrelo en tu navegador
+          (Chrome o Safari).
         </div>
       )}
     </div>

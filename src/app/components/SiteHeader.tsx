@@ -26,7 +26,7 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-30 border-b border-border/60 bg-background/55 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-[1100] border-b border-border/60 bg-background/55 backdrop-blur-xl">
       <div className="flex w-full items-center justify-between gap-x-5 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
