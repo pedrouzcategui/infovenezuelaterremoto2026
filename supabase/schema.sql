@@ -403,3 +403,7 @@ create policy "solicitudes: lectura pública"
 -- v18: el correo es opcional (el admin puede publicar solicitudes
 -- directamente, sin el proceso de verificación por correo).
 alter table public.solicitudes alter column email drop not null;
+
+-- v19: quién contribuyó el centro / servicio (nombre del colaborador o admin).
+alter table public.centros   add column if not exists contribuido_por text;
+alter table public.servicios add column if not exists contribuido_por text;

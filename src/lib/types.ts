@@ -96,6 +96,7 @@ export interface Centro {
   patrocinado: boolean;
   patrocinador_nombre: string | null;
   patrocinador_logo: string | null;
+  contribuido_por: string | null;
   activo: boolean;
   created_at: string;
 }
@@ -132,6 +133,7 @@ export interface Servicio {
   votos_positivos: number;
   votos_negativos: number;
   reportes: number;
+  contribuido_por: string | null;
   activo: boolean;
   created_at: string;
 }

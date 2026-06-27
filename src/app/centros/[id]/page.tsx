@@ -95,6 +95,11 @@ export default async function CentroDetallePage({
               {centro.zona}
               {centro.direccion ? ` · 📍 ${centro.direccion}` : ""}
             </p>
+            {centro.contribuido_por && (
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-wide text-faint">
+                Contribuido por {centro.contribuido_por}
+              </p>
+            )}
           </div>
 
           {(necesidades.length > 0 || centro.necesidades_detalle) && (

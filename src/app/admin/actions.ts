@@ -186,7 +186,7 @@ export async function crearCentro(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAprobado();
+  const perfil = await requireAprobado();
   const f = centroFields(formData);
   const zona = (str(formData, "zona") ?? "") as Zona;
   if (!f.nombre) return { error: "El nombre es obligatorio." };
@@ -201,6 +201,7 @@ export async function crearCentro(
       zona,
       ...(foto_url ? { foto_url } : {}),
       ...(patrocinador_logo ? { patrocinador_logo } : {}),
+      contribuido_por: perfil.nombre ?? perfil.email ?? "Equipo",
       activo: true,
     });
   if (error) return { error: `No se pudo crear: ${error.message}` };
@@ -263,7 +264,7 @@ export async function crearServicio(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  await requireAprobado();
+  const perfil = await requireAprobado();
   const f = servicioFields(formData);
   const categoria = (str(formData, "categoria") ?? "") as CategoriaServicio;
   if (!f.nombre) return { error: "El nombre es obligatorio." };
@@ -273,7 +274,13 @@ export async function crearServicio(
   const foto_url = await uploadImagen(formData, "foto", "servicios");
   const { error } = await supabaseAdmin()
     .from("servicios")
-    .insert({ ...f, categoria, ...(foto_url ? { foto_url } : {}), activo: true });
+    .insert({
+      ...f,
+      categoria,
+      ...(foto_url ? { foto_url } : {}),
+      contribuido_por: perfil.nombre ?? perfil.email ?? "Equipo",
+      activo: true,
+    });
   if (error) return { error: `No se pudo crear: ${error.message}` };
   revalidatePath("/admin/servicios");
   revalidatePath("/servicios");

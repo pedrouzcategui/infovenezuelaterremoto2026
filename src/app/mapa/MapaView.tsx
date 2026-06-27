@@ -68,6 +68,7 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
   const mapRef = useRef<L.Map | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
   const [estado, setEstado] = useState<"idle" | "buscando" | "error">("idle");
+  const [objetivo, setObjetivo] = useState("Centros de acopio");
 
   // Grupos para filtrar: centros + todas las categorías de servicios.
   const grupos = useMemo(() => {
@@ -129,16 +130,22 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
           .addTo(map)
           .bindPopup("Tú estás aquí");
 
-        const centros = puntos.filter((p) => p.tipo === "centro");
-        if (centros.length === 0) {
-          map.flyTo([latitude, longitude], 14);
+        const candidatos = puntos.filter((p) => p.grupo === objetivo);
+        if (candidatos.length === 0) {
+          map.flyTo([latitude, longitude], 13);
+          L.popup()
+            .setLatLng([latitude, longitude])
+            .setContent(
+              `<strong>Sin resultados</strong><br>No hay "${objetivo}" registrados todavía.`,
+            )
+            .openOn(map);
           setEstado("idle");
           return;
         }
 
-        let cercano = centros[0];
+        let cercano = candidatos[0];
         let mejor = Infinity;
-        for (const c of centros) {
+        for (const c of candidatos) {
           const d = distanciaM(latitude, longitude, c.lat, c.lng);
           if (d < mejor) {
             mejor = d;
@@ -150,9 +157,9 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
         L.popup()
           .setLatLng([cercano.lat, cercano.lng])
           .setContent(
-            `<strong>${cercano.nombre}</strong><br>El centro más cercano · a ${formatDist(
+            `<strong>${cercano.nombre}</strong><br>El más cercano · a ${formatDist(
               mejor,
-            )} de ti${cercano.href ? `<br><a href="${cercano.href}" style="color:#059669">Ver centro</a>` : ""}`,
+            )} de ti${cercano.href ? `<br><a href="${cercano.href}" style="color:#059669">${cercano.hrefLabel ?? "Ver"} →</a>` : ""}`,
           )
           .openOn(map);
         setEstado("idle");
@@ -289,13 +296,27 @@ export default function MapaView({ puntos }: { puntos: PuntoMapa[] }) {
         </div>
       )}
 
-      <button
-        onClick={ubicarMasCercano}
-        disabled={estado === "buscando"}
-        className="absolute right-3 top-3 z-[1000] flex items-center gap-1.5 border border-emerald-400/60 bg-[#070a0f]/90 px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 shadow-lg backdrop-blur hover:bg-emerald-500 hover:text-black disabled:opacity-70"
-      >
-        📍 {estado === "buscando" ? "Buscando…" : "Centro más cercano"}
-      </button>
+      <div className="absolute right-3 top-3 z-[1000] flex max-w-[calc(100%-1.5rem)] flex-wrap items-stretch justify-end gap-2">
+        <select
+          value={objetivo}
+          onChange={(e) => setObjetivo(e.target.value)}
+          aria-label="¿Qué quieres ubicar?"
+          className="border border-emerald-400/40 bg-[#070a0f]/90 px-2 py-2 font-mono text-xs uppercase tracking-wide text-emerald-300 shadow-lg backdrop-blur focus:outline-none"
+        >
+          {grupos.map((g) => (
+            <option key={g.grupo} value={g.grupo}>
+              {g.emoji} {g.grupo}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={ubicarMasCercano}
+          disabled={estado === "buscando"}
+          className="flex items-center gap-1.5 border border-emerald-400/60 bg-[#070a0f]/90 px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 shadow-lg backdrop-blur hover:bg-emerald-500 hover:text-black disabled:opacity-70"
+        >
+          📍 {estado === "buscando" ? "Buscando…" : "Ubicar cercano"}
+        </button>
+      </div>
 
       {estado === "error" && (
         <div className="absolute bottom-3 left-1/2 z-[1000] -translate-x-1/2 border border-rose-500/60 bg-[#070a0f]/90 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wide text-rose-400 shadow-lg">

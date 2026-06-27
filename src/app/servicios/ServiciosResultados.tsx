@@ -101,6 +101,11 @@ export function ServiciosResultados({
                   {s.direccion && (
                     <p className="mt-1 text-sm text-muted">📍 {s.direccion}</p>
                   )}
+                  {s.contribuido_por && (
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-wide text-faint">
+                      Contribuido por {s.contribuido_por}
+                    </p>
+                  )}
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {wa && (
