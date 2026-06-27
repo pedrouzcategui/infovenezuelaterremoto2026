@@ -54,7 +54,7 @@ export function ServiciosResultados({
             const ig = instagramLink(s.instagram);
             const meta = servicioMeta(s.categoria);
             return (
-              <li key={s.id} className="overflow-hidden border border-border bg-surface">
+              <li key={s.id} className="flex flex-col overflow-hidden border border-border bg-surface">
                 {s.foto_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -67,7 +67,7 @@ export function ServiciosResultados({
                     {meta.emoji}
                   </div>
                 )}
-                <div className="p-4">
+                <div className="flex flex-1 flex-col p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-foreground">{s.nombre}</h3>
@@ -107,7 +107,7 @@ export function ServiciosResultados({
                     </p>
                   )}
 
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
                     {wa && (
                       <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp" className="flex h-9 w-9 items-center justify-center bg-emerald-600 text-white hover:bg-emerald-700">
                         <IconWhatsApp />
