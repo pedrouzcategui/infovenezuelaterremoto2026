@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Buscar personas (desaparecidos)",
   description:
-    "Busca personas desaparecidas, a salvo o encontradas por cédula o nombre. Datos consolidados por Venezuela Reporta.",
+    "Lista y búsqueda de personas desaparecidas, a salvo o encontradas por cédula, nombre o ciudad. Datos consolidados por Venezuela Reporta.",
   alternates: { canonical: "/personas" },
 };
 
 const API = "https://venezuelareporta.org/api/v1/personas";
 const FUENTE = "https://venezuelareporta.org";
+const PER_PAGE = 24;
 
 type Persona = {
   id: string;
@@ -33,11 +35,18 @@ const ESTADO: Record<string, { label: string; badge: string }> = {
   encontrado: { label: "Encontrado", badge: "bg-sky-500/15 text-sky-400 ring-sky-400/40" },
 };
 
-async function buscar(q: string, status: string) {
+async function buscar(params: {
+  q: string;
+  status: string;
+  ciudad: string;
+  offset: number;
+}) {
   const url = new URL(API);
-  url.searchParams.set("q", q);
-  if (status) url.searchParams.set("status", status);
-  url.searchParams.set("limit", "40");
+  if (params.q) url.searchParams.set("q", params.q);
+  if (params.status) url.searchParams.set("status", params.status);
+  if (params.ciudad) url.searchParams.set("ciudad", params.ciudad);
+  url.searchParams.set("limit", String(PER_PAGE));
+  url.searchParams.set("offset", String(params.offset));
   const res = await fetch(url, { next: { revalidate: 30 } });
   if (!res.ok) throw new Error("bad status");
   const json = (await res.json()) as { personas?: Persona[]; total?: number };
@@ -47,24 +56,38 @@ async function buscar(q: string, status: string) {
 export default async function PersonasPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; status?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; ciudad?: string; page?: string }>;
 }) {
-  const { q, status } = await searchParams;
-  const termino = q?.trim() ?? "";
-  const est = status ?? "";
+  const sp = await searchParams;
+  const q = sp.q?.trim() ?? "";
+  const status = sp.status ?? "";
+  const ciudad = sp.ciudad?.trim() ?? "";
+  const page = Math.max(1, Number(sp.page) || 1);
+  const offset = (page - 1) * PER_PAGE;
 
   let personas: Persona[] = [];
   let total = 0;
   let error = false;
-  if (termino) {
-    try {
-      const r = await buscar(termino, est);
-      personas = r.personas;
-      total = r.total;
-    } catch {
-      error = true;
-    }
+  try {
+    const r = await buscar({ q, status, ciudad, offset });
+    personas = r.personas;
+    total = r.total;
+  } catch {
+    error = true;
   }
+
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+
+  // Construye un enlace conservando los filtros, cambiando la página.
+  const hrefPagina = (p: number) => {
+    const usp = new URLSearchParams();
+    if (q) usp.set("q", q);
+    if (status) usp.set("status", status);
+    if (ciudad) usp.set("ciudad", ciudad);
+    if (p > 1) usp.set("page", String(p));
+    const s = usp.toString();
+    return s ? `/personas?${s}` : "/personas";
+  };
 
   return (
     <div className="mx-auto max-w-3xl space-y-5 py-2">
@@ -73,8 +96,9 @@ export default async function PersonasPage({
           Buscar personas
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Busca por <strong className="text-foreground">cédula</strong> o nombre a
-          personas desaparecidas, a salvo o encontradas. Datos de{" "}
+          Personas desaparecidas, a salvo o encontradas. Busca por{" "}
+          <strong className="text-foreground">cédula</strong>, nombre o ciudad.
+          Datos de{" "}
           <a href={FUENTE} target="_blank" rel="noopener noreferrer" className="text-emerald-500 underline">
             Venezuela Reporta
           </a>
@@ -82,18 +106,23 @@ export default async function PersonasPage({
         </p>
       </div>
 
-      {/* Formulario de búsqueda */}
-      <form method="get" className="flex flex-wrap gap-2 border border-border bg-surface p-4">
+      {/* Filtros (GET) */}
+      <form method="get" className="grid gap-2 border border-border bg-surface p-4 sm:grid-cols-[1fr_auto_auto_auto]">
         <input
           name="q"
-          defaultValue={termino}
-          required
+          defaultValue={q}
           placeholder="Cédula o nombre…"
-          className="min-w-0 flex-1 border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+          className="min-w-0 border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+        />
+        <input
+          name="ciudad"
+          defaultValue={ciudad}
+          placeholder="Ciudad"
+          className="border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-faint focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
         />
         <select
           name="status"
-          defaultValue={est}
+          defaultValue={status}
           className="border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-emerald-500 focus:outline-none"
         >
           <option value="">Cualquier estado</option>
@@ -109,26 +138,24 @@ export default async function PersonasPage({
         </button>
       </form>
 
-      {/* Resultados */}
-      {!termino ? (
-        <p className="border border-dashed border-border bg-surface p-6 text-center text-faint">
-          Escribe una cédula o un nombre para buscar.
-        </p>
-      ) : error ? (
+      {error ? (
         <p className="border border-rose-500/40 bg-rose-500/10 p-6 text-center text-rose-500">
           No se pudo consultar el servicio de Venezuela Reporta. Intenta de nuevo
           en un momento.
         </p>
       ) : personas.length === 0 ? (
         <p className="border border-dashed border-border bg-surface p-6 text-center text-faint">
-          No se encontraron personas para “{termino}”.
+          {q || ciudad || status
+            ? "No se encontraron personas con esos filtros."
+            : "No hay personas registradas por ahora."}
         </p>
       ) : (
         <>
           <p className="font-mono text-[11px] uppercase tracking-wide text-faint">
-            {total} resultado{total === 1 ? "" : "s"}
-            {personas.length < total ? ` · mostrando ${personas.length}` : ""}
+            {total.toLocaleString("es-VE")} resultado{total === 1 ? "" : "s"} ·
+            página {page} de {totalPages.toLocaleString("es-VE")}
           </p>
+
           <ul className="grid gap-3">
             {personas.map((p) => {
               const e = ESTADO[p.status] ?? {
@@ -171,9 +198,7 @@ export default async function PersonasPage({
                         </span>
                       )}
                     </div>
-                    {detalle && (
-                      <p className="mt-1 text-xs text-muted">{detalle}</p>
-                    )}
+                    {detalle && <p className="mt-1 text-xs text-muted">{detalle}</p>}
                     {p.descripcion && (
                       <p className="mt-1 line-clamp-2 text-sm text-muted">
                         {p.descripcion}
@@ -194,6 +219,35 @@ export default async function PersonasPage({
               );
             })}
           </ul>
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between gap-3 border-t border-border pt-4 font-mono text-xs uppercase tracking-wide">
+              {page > 1 ? (
+                <Link
+                  href={hrefPagina(page - 1)}
+                  className="border border-border bg-surface px-4 py-2 text-foreground hover:bg-surface-2"
+                >
+                  ← Anterior
+                </Link>
+              ) : (
+                <span className="px-4 py-2 text-faint/50">← Anterior</span>
+              )}
+              <span className="text-faint">
+                {page} / {totalPages.toLocaleString("es-VE")}
+              </span>
+              {page < totalPages ? (
+                <Link
+                  href={hrefPagina(page + 1)}
+                  className="border border-border bg-surface px-4 py-2 text-foreground hover:bg-surface-2"
+                >
+                  Siguiente →
+                </Link>
+              ) : (
+                <span className="px-4 py-2 text-faint/50">Siguiente →</span>
+              )}
+            </div>
+          )}
         </>
       )}
 
