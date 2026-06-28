@@ -109,6 +109,35 @@ export default async function Home() {
               </div>
             ))}
           </div>
+
+          {/* Personas reportadas (Venezuela Reporta) */}
+          {personas && (
+            <div className="mt-4 w-full max-w-lg">
+              <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-white/45">
+                Personas reportadas · Venezuela Reporta
+              </div>
+              <div className="grid grid-cols-3 gap-px border border-white/15 bg-white/15 font-mono">
+                {[
+                  { n: personas.buscando, label: "Buscando", status: "buscando", color: "text-amber-400" },
+                  { n: personas.aSalvo, label: "A salvo", status: "a_salvo", color: "text-emerald-400" },
+                  { n: personas.encontrado, label: "Encontrados", status: "encontrado", color: "text-sky-400" },
+                ].map((s) => (
+                  <Link
+                    key={s.label}
+                    href={`/personas?status=${s.status}`}
+                    className="bg-[#070a0f] px-4 py-3 transition-colors hover:bg-white/5"
+                  >
+                    <div className={`text-2xl font-extrabold ${s.color}`}>
+                      {s.n != null ? s.n.toLocaleString("es-VE") : "—"}
+                    </div>
+                    <div className="mt-0.5 text-[10px] uppercase tracking-widest text-white/45">
+                      {s.label}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -133,40 +162,6 @@ export default async function Home() {
           ))}
         </div>
       </section>
-
-      {/* PERSONAS — datos de Venezuela Reporta */}
-      {personas && (
-        <section>
-          <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-faint">
-            Personas reportadas · Venezuela Reporta
-          </h2>
-          <div className="grid gap-px border border-border bg-border sm:grid-cols-3">
-            {[
-              { n: personas.buscando, label: "Buscando", status: "buscando", color: "text-amber-500" },
-              { n: personas.aSalvo, label: "A salvo", status: "a_salvo", color: "text-emerald-400" },
-              { n: personas.encontrado, label: "Encontrados", status: "encontrado", color: "text-sky-400" },
-            ].map((s) => (
-              <Link
-                key={s.label}
-                href={`/personas?status=${s.status}`}
-                className="bg-surface p-5 transition-colors hover:bg-surface-2"
-              >
-                <div className={`font-mono text-3xl font-extrabold ${s.color}`}>
-                  {s.n != null ? s.n.toLocaleString("es-VE") : "—"}
-                </div>
-                <div className="mt-1 font-mono text-[11px] uppercase tracking-widest text-muted">
-                  {s.label}
-                </div>
-              </Link>
-            ))}
-          </div>
-          <p className="mt-2 font-mono text-[11px] uppercase tracking-wide text-faint">
-            <Link href="/personas" className="underline hover:text-muted">
-              Buscar una persona por cédula →
-            </Link>
-          </p>
-        </section>
-      )}
 
       {/* DIRECTORIO DE CENTROS */}
       <section id="centros" className="scroll-mt-20">
