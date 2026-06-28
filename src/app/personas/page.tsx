@@ -184,9 +184,9 @@ export default async function PersonasPage({
                       👤
                     </div>
                   )}
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 overflow-hidden">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-bold text-foreground">
+                      <h3 className="min-w-0 break-words font-bold text-foreground [overflow-wrap:anywhere]">
                         {p.nombre ?? "Sin nombre"}
                       </h3>
                       <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1 ${e.badge}`}>
@@ -200,7 +200,7 @@ export default async function PersonasPage({
                     </div>
                     {detalle && <p className="mt-1 text-xs text-muted">{detalle}</p>}
                     {p.descripcion && (
-                      <p className="mt-1 line-clamp-2 text-sm text-muted">
+                      <p className="mt-1 line-clamp-2 break-words text-sm text-muted [overflow-wrap:anywhere]">
                         {p.descripcion}
                       </p>
                     )}

@@ -13,11 +13,37 @@ const TILES = [
   { href: "/emergencias", emoji: "🚨", title: "Números de emergencia", desc: "Bomberos, Protección Civil, Policía y 911." },
 ];
 
+// Cuenta de personas por estado desde Venezuela Reporta (resiliente).
+async function getPersonasStats() {
+  const base = "https://venezuelareporta.org/api/v1/personas";
+  const count = async (status: string) => {
+    try {
+      const url = new URL(base);
+      url.searchParams.set("status", status);
+      url.searchParams.set("limit", "1");
+      const res = await fetch(url, { next: { revalidate: 120 } });
+      if (!res.ok) return null;
+      const j = (await res.json()) as { total?: number };
+      return typeof j.total === "number" ? j.total : null;
+    } catch {
+      return null;
+    }
+  };
+  const [buscando, aSalvo, encontrado] = await Promise.all([
+    count("buscando"),
+    count("a_salvo"),
+    count("encontrado"),
+  ]);
+  if (buscando == null && aSalvo == null && encontrado == null) return null;
+  return { buscando, aSalvo, encontrado };
+}
+
 export default async function Home() {
-  const [centros, servicios, instituciones] = await Promise.all([
+  const [centros, servicios, instituciones, personas] = await Promise.all([
     getCentros(),
     getServicios(),
     getInstituciones(),
+    getPersonasStats(),
   ]);
 
   const stats = [
@@ -107,6 +133,40 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {/* PERSONAS — datos de Venezuela Reporta */}
+      {personas && (
+        <section>
+          <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-faint">
+            Personas reportadas · Venezuela Reporta
+          </h2>
+          <div className="grid gap-px border border-border bg-border sm:grid-cols-3">
+            {[
+              { n: personas.buscando, label: "Buscando", status: "buscando", color: "text-amber-500" },
+              { n: personas.aSalvo, label: "A salvo", status: "a_salvo", color: "text-emerald-400" },
+              { n: personas.encontrado, label: "Encontrados", status: "encontrado", color: "text-sky-400" },
+            ].map((s) => (
+              <Link
+                key={s.label}
+                href={`/personas?status=${s.status}`}
+                className="bg-surface p-5 transition-colors hover:bg-surface-2"
+              >
+                <div className={`font-mono text-3xl font-extrabold ${s.color}`}>
+                  {s.n != null ? s.n.toLocaleString("es-VE") : "—"}
+                </div>
+                <div className="mt-1 font-mono text-[11px] uppercase tracking-widest text-muted">
+                  {s.label}
+                </div>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-2 font-mono text-[11px] uppercase tracking-wide text-faint">
+            <Link href="/personas" className="underline hover:text-muted">
+              Buscar una persona por cédula →
+            </Link>
+          </p>
+        </section>
+      )}
 
       {/* DIRECTORIO DE CENTROS */}
       <section id="centros" className="scroll-mt-20">
