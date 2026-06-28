@@ -62,6 +62,18 @@ export function Footer() {
               Plataformas aliadas →
             </Link>
           </p>
+          <p className="mt-2 text-sm text-muted">
+            La búsqueda de personas usa datos de{" "}
+            <a
+              href="https://venezuelareporta.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-emerald-500 underline hover:text-emerald-400"
+            >
+              Venezuela Reporta
+            </a>
+            .
+          </p>
         </section>
 
         {/* Créditos + meta */}
