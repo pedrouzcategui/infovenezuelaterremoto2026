@@ -30,6 +30,11 @@ const GRUPOS: Grupo[] = [
   {
     titulo: "Red de apoyo",
     enlaces: [
+      {
+        nombre: "ayudave.moonlightnetwork.net",
+        url: "https://ayudave.moonlightnetwork.net",
+        nota: "Plataforma de ayuda con API abierta",
+      },
       { nombre: "sosvenezuela2026.com", url: "https://sosvenezuela2026.com" },
       { nombre: "redayudavenezuela.com", url: "https://redayudavenezuela.com" },
     ],
