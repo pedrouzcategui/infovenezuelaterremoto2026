@@ -73,6 +73,16 @@ async function fetchBuildings(p: {
   return { buildings, total: Number.isFinite(total) ? total : buildings.length };
 }
 
+// Las URLs de Supabase Storage son privadas (400); terremotovenezuela.com
+// sirve las mismas imágenes por su proxy público. Reescribimos a ese proxy.
+function mediaUrl(u: string | null): string | null {
+  if (!u) return null;
+  return u.replace(
+    "https://jckifxsdlnsvbztxydes.supabase.co/storage/v1/object/public/damage-media/",
+    "https://terremotovenezuela.com/api/public/media/",
+  );
+}
+
 function fechaCorta(iso: string | null) {
   if (!iso) return null;
   try {
@@ -188,12 +198,13 @@ export default async function EdificacionesPage({
                   ? b.address
                   : null;
               const fecha = fechaCorta(b.last_updated_at);
+              const foto = mediaUrl(b.main_photo_url);
               return (
                 <li key={b.id} className="flex gap-3 overflow-hidden border border-border bg-surface p-3">
-                  {b.main_photo_url ? (
+                  {foto ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={b.main_photo_url}
+                      src={foto}
                       alt={b.name ?? ""}
                       className="h-24 w-24 shrink-0 object-cover"
                     />
