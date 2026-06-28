@@ -22,24 +22,43 @@ export function MapaTabs({
 }) {
   const [tab, setTab] = useState<Tab>("acopio");
 
-  const tabBtn = (t: Tab, label: string) => (
-    <button
-      onClick={() => setTab(t)}
-      className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wide transition-colors ${
-        tab === t
-          ? "bg-emerald-500 text-black"
-          : "border border-border bg-surface text-muted hover:bg-surface-2"
-      }`}
-    >
-      {label}
-    </button>
-  );
+  const OPCIONES: { key: Tab; label: string }[] = [
+    { key: "acopio", label: "🤝 Centros de acopio" },
+    { key: "edificaciones", label: "🏚️ Edificaciones afectadas" },
+  ];
+  const actual = OPCIONES.find((o) => o.key === tab) ?? OPCIONES[0];
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {tabBtn("acopio", "🤝 Centros de acopio")}
-        {tabBtn("edificaciones", "🏚️ Edificaciones afectadas")}
+      {/* Selector de mapa (menú desplegable al pasar el cursor / tocar) */}
+      <div className="group relative inline-block">
+        <button
+          type="button"
+          className="flex items-center gap-2 border border-emerald-500/60 bg-surface px-4 py-2 font-mono text-xs font-bold uppercase tracking-wide text-foreground hover:bg-surface-2"
+        >
+          {actual.label}
+          <span className="text-faint transition-transform group-hover:rotate-180">
+            ▾
+          </span>
+        </button>
+        <div className="absolute left-0 top-full z-[1100] hidden min-w-[18rem] pt-1 group-hover:block group-focus-within:block">
+          <div className="border border-border bg-surface shadow-2xl">
+            {OPCIONES.map((o) => (
+              <button
+                key={o.key}
+                type="button"
+                onClick={() => setTab(o.key)}
+                className={`block w-full px-4 py-3 text-left font-mono text-xs font-bold uppercase tracking-wide ${
+                  tab === o.key
+                    ? "bg-emerald-500 text-black"
+                    : "text-muted hover:bg-surface-2 hover:text-foreground"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="mx-[calc(50%-50vw)] w-screen border-y border-[#1e2735] bg-[#070a0f] text-white">
