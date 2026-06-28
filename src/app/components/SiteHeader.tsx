@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/mapa", label: "Mapa" },
   { href: "/servicios", label: "Servicios" },
   { href: "/personas", label: "Personas" },
+  { href: "/edificaciones", label: "Daños" },
   { href: "/solicitudes", label: "Solicitudes" },
   { href: "/anuncios", label: "Anuncios" },
   { href: "/paises", label: "Países" },

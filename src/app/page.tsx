@@ -10,6 +10,8 @@ const TILES = [
   { href: "/anuncios", emoji: "📣", title: "Anuncios", desc: "Avisos oficiales, extraoficiales y rumores." },
   { href: "/paises", emoji: "🌍", title: "Ayuda internacional", desc: "Países e instituciones que ayudan." },
   { href: "/donaciones", emoji: "🏛️", title: "Donar dinero", desc: "Instituciones oficiales para donar." },
+  { href: "/edificaciones", emoji: "🏚️", title: "Edificaciones afectadas", desc: "Reportes de daños en edificios." },
+  { href: "/personas", emoji: "🔎", title: "Buscar personas", desc: "Desaparecidos, a salvo y encontrados." },
   { href: "/emergencias", emoji: "🚨", title: "Números de emergencia", desc: "Bomberos, Protección Civil, Policía y 911." },
 ];
 

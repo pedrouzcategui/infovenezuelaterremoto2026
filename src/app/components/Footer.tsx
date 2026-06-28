@@ -71,6 +71,15 @@ export function Footer() {
               className="font-semibold text-emerald-500 underline hover:text-emerald-400"
             >
               Venezuela Reporta
+            </a>{" "}
+            y las edificaciones afectadas de{" "}
+            <a
+              href="https://terremotovenezuela.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-emerald-500 underline hover:text-emerald-400"
+            >
+              terremotovenezuela.com
             </a>
             .
           </p>
