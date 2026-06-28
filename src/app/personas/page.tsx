@@ -90,7 +90,7 @@ export default async function PersonasPage({
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5 py-2">
+    <div className="mx-auto max-w-5xl space-y-5 py-2">
       <div>
         <h1 className="text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl">
           Buscar personas
@@ -156,7 +156,7 @@ export default async function PersonasPage({
             página {page} de {totalPages.toLocaleString("es-VE")}
           </p>
 
-          <ul className="grid gap-3">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {personas.map((p) => {
               const e = ESTADO[p.status] ?? {
                 label: p.status,
@@ -171,16 +171,16 @@ export default async function PersonasPage({
                 .filter(Boolean)
                 .join(" · ");
               return (
-                <li key={p.id} className="flex gap-3 border border-border bg-surface p-3">
+                <li key={p.id} className="flex gap-3 border border-border bg-surface p-3 transition-colors hover:border-emerald-500/40">
                   {p.foto_url ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={p.foto_url}
                       alt={p.nombre ?? ""}
-                      className="h-20 w-20 shrink-0 object-cover"
+                      className="h-24 w-24 shrink-0 self-start object-cover"
                     />
                   ) : (
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center bg-surface-2 text-2xl opacity-50">
+                    <div className="flex h-24 w-24 shrink-0 items-center justify-center self-start bg-surface-2 text-2xl opacity-50">
                       👤
                     </div>
                   )}
